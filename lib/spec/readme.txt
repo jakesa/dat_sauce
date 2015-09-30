@@ -1,0 +1,2 @@
+These spec tests need to run from the directory that your cucumber tests are in (preferably the parent directory of the  features directory).
+You will also need to adjust the file path used in the tests to something that points to a valid test in your features directory
