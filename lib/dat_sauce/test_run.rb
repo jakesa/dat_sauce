@@ -19,7 +19,7 @@ module DATSauce
   class TestRun < BaseTest
 
     custom_attr_accessor :run_id, :project, :test_count, :test_run_status, :rerun, :run_options,
-                         :tests, :runner_type, :desired_caps, :queue_size, :results
+                         :tests, :runner_type, :desired_caps, :queue_size, :results, :status
 
 
     # TODO: write a args parser for this instead of hard coding all of the attr_accessor values
@@ -34,58 +34,98 @@ module DATSauce
       @event_emitter = event_emitter
       @runner_type = runner_type
       @desired_caps = desired_caps
-      @progress_bar = DATSauce::ProgressBar.new()
+      @status = 'Initialized'
+      # @progress_bar = DATSauce::ProgressBar.new()
     end
 
+    def run
+      @status = 'Started'
+      # test_objects =
+      start_test_run(create_test_objects(@tests, @run_options, @run_id))
+      puts summarize_results
+    end
+
+    private
 
     def create_test_objects(tests, run_options, run_id = @run_id)
+      # report test creation
+      puts "Creating test objects"
       test_objects = []
       tests.each do |test|
         test_objects << DATSauce::Test.new(run_id, test, run_options)
       end
+      puts test_objects
       test_objects
     end
 
     def get_queue_size
+      puts "Getting queue size: "
       if @runner_type == 'sauce'
         # get max concurrent tests from sauce and assign to @queue_size
         @queue_size = 8 #this is hard coded for now. Will change later
       elsif @runner_type == 'grid'
         # get max nodes from grid
       elsif @runner_type == 'local'
+        @queue_size = 4
         # get max threads from platform utils
       end
+      puts "Size: #{@queue_size}"
+      @queue_size
     end
 
     def start_test_run(test_objects)
+      puts "Starting test run"
+      @status = "Running"
       start_time = Time.now
       threads = []
       get_queue_size.times do
         test = get_next_test(test_objects)
-        threads << run_test(test)
+        threads << run_test(test) unless test.nil?
       end
       start_queue(test_objects, threads)
+      process_run_results(test_objects, :primary, start_time)
 
       if @rerun
-        start_rerun(test_objects)
+        puts "This test run has been flagged for rerun. Starting rerun..."
+        if there_are_failures?(test_objects)
+          _start_time = Time.now
+          start_rerun(test_objects)
+          process_run_results(test_objects, :rerun, _start_time)
+        else
+          puts "There were no failures detected. No rerun will be started"
+        end
       end
 
-      process_run_results(test_objects, start_time)
+      @results[:run_time] = Time.now - start_time
 
+    end
+
+    def there_are_failures?(test_objects)
+      test_objects.each do |test|
+        return true if test.status == 'Failed' && test.run_count <= 1
+      end
+      false
     end
 
     def start_rerun(test_objects)
       threads = []
       @queue_size.times do
         test = get_next_rerun_test(test_objects)
+        break if test.nil?
         threads << run_test(test)
       end
-      start_rerun_queue(test_objects, threads)
+      if get_next_rerun_test(test_objects).nil?
+        puts "There were no more tests in queue for rerun. Waiting for current tests to finish..."
+        threads.each {|t| t.join}
+      else
+        start_rerun_queue(test_objects, threads)
+      end
     end
 
 
     #TODO: I can probably improve the performance here by doing some kind of caching. Will revisit later
     def start_queue(test_objects, threads)
+      puts "Test run started. Sending remaining tests to queue..."
       test = get_next_test(test_objects)
       while test != nil
         if get_active_thread_count(threads) < @queue_size
@@ -93,10 +133,14 @@ module DATSauce
           test = get_next_test(test_objects)
         end
       end
-      threads.join
+      puts 'Queue complete. Waiting for tests to finish running...'
+      threads.each do |t|
+        t.join
+      end
     end
 
     def start_rerun_queue(test_objects, threads)
+      puts "Test rerun started. Sending remaining tests to queue..."
       test = get_next_rerun_test(test_objects)
       while test != nil
         if get_active_thread_count(threads) < @queue_size
@@ -104,19 +148,26 @@ module DATSauce
           test = get_next_rerun_test(test_objects)
         end
       end
-      threads.join
+      puts 'Queue complete. Waiting for current tests to finish...'
+      threads.each {|t| t.join}
     end
 
     def get_next_test(test_objects)
       test_objects.each do |test|
-        return test if test.status "In Queue"
+        if test.status == "In Queue"
+          test.status = "Processing"
+          return test
+        end
       end
       nil
     end
 
     def get_next_rerun_test(test_objects)
       test_objects.each do |test|
-        return test if !test.results[:primary][:failed_tests].nil?
+        if test.status == 'Failed' && test.run_count <= 1
+          test.status = 'Processing'
+          return test
+        end
       end
       nil
     end
@@ -130,7 +181,7 @@ module DATSauce
       Thread.new(test) {|t| t.run}
     end
 
-    def process_run_results(test_objects, start_time)
+    def process_run_results(test_objects, run_type, start_time)
       primary_results_log = ''
       primary_run_time = 0
       primary_failures = []
@@ -138,37 +189,62 @@ module DATSauce
       rerun_failures = []
       rerun_run_time = 0
       test_objects.each do |test|
-        primary_results_log << test.results[:primary][:results]
-        primary_run_time += test.results[:primary][:run_time]
-        primary_failures << test.results[:primary][:failed_tests]
-        rerun_results_log << test.results[:rerun][:results]
-        rerun_run_time += test.results[:rerun][:run_time]
-        rerun_failures << test.results[:rerun][:failed_tests]
+        if run_type == :primary
+          primary_results_log << test.results[:primary].log
+          primary_run_time += test.results[:primary].run_time
+          primary_failures << test.results[:primary].failed_tests
+          results = DATSauce::Result.new({:results => primary_results_log, :failed_tests => primary_failures }, start_time)
+          results.aggregate_run_time = primary_run_time
+          @results[:primary] = results
+        elsif run_type == :rerun
+          unless test.results[:rerun].nil?
+            rerun_results_log << test.results[:rerun].log
+            rerun_run_time += test.results[:rerun].run_time
+            rerun_failures << test.results[:rerun].failed_tests
+            results = DATSauce::Result.new({:results => rerun_results_log, :failed_tests => rerun_failures }, start_time)
+            results.aggregate_run_time = rerun_run_time
+            @results[:rerun] = results
+          end
+        end
       end
 
 
-      @results[:primary] = {
-          :results =>primary_results_log,
-          :results_summary => DATSauce::Cucumber::ResultsParser.summarize_results(primary_results_log),
-          :pass_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:pass],
-          :fail_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:fail],
-          :failed_tests =>primary_failures,
-          :run_time => primary_run_time
-      }
+      # @results[:primary] = {
+      #     :results =>primary_results_log,
+      #     :results_summary => DATSauce::Cucumber::ResultsParser.summarize_results(primary_results_log),
+      #     :pass_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:pass],
+      #     :fail_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:fail],
+      #     :failed_tests =>primary_failures,
+      #     :run_time => primary_run_time
+      # }
 
-      @results[:rerun] = {
-          :results =>rerun_results_log,
-          :results_summary => DATSauce::Cucumber::ResultsParser.summarize_results(rerun_results_log),
-          :pass_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:pass],
-          :fail_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:fail],
-          :failed_tests =>rerun_failures,
-          :run_time => rerun_run_time
-      }
-      @results[:run_time] = (start_time - Time.now).to_i * 1000
+
+      # @results[:rerun] = {
+      #     :results =>rerun_results_log,
+      #     :results_summary => DATSauce::Cucumber::ResultsParser.summarize_results(rerun_results_log),
+      #     :pass_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:pass],
+      #     :fail_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:fail],
+      #     :failed_tests =>rerun_failures,
+      #     :run_time => rerun_run_time
+      # }
+      # @results[:run_time] = (Time.now - start_time)
 
     end
 
-
+    def summarize_results
+      puts "#############################"
+      puts "Primary run results"
+      puts "#{results[:primary].results_summary}"
+      puts "Took #{calculate_runtime(results[:primary].run_time)}"
+      puts "#############################"
+      unless results[:rerun].nil?
+        puts "Rerun results"
+        puts "#{results[:rerun].results_summary}"
+        puts "Took #{calculate_runtime(results[:rerun].run_time)}"
+        puts "#############################"
+      end
+      puts "Total Runtime: #{calculate_runtime(results[:run_time])}"
+    end
 
 
     def update_stats
@@ -181,7 +257,10 @@ module DATSauce
       # }
     end
 
-    private
+    def calculate_runtime(time)
+      Time.at(time).utc.strftime("%H:%M:%S")
+      # [total_time / 3600, total_time/ 60 % 60, total_time % 60].map { |t| t.to_s.rjust(2,'0') }.join(':')
+    end
 
     def generate_run_id
       @project + "#{Time.now.to_i.to_s}"

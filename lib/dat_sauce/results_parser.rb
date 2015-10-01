@@ -43,8 +43,8 @@ module DATSauce
         end
 
         if _group.downcase.include? 'scenario'
-          @@p_count = ''
-          @@f_count = ''
+          @@p_count = nil
+          @@f_count = nil
           @@p_count = passed_count unless passed_count.nil?
           @@f_count = failed_count unless failed_count.nil?
         end

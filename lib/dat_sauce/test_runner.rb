@@ -20,6 +20,7 @@ module DATSauce
           rescue => e
             puts "there was an error"
             puts e
+            puts e.backtrace
           end
 
           puts "Running test: #{test}"
@@ -34,6 +35,7 @@ module DATSauce
           result_hash = {}
           result_hash[:failed_tests] = process_temp_file(temp_file)
           result_hash[:results] = _results
+          result_hash
           # JSON.generate result_hash
         end
 

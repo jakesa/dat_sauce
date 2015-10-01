@@ -1,5 +1,4 @@
 require_relative 'base_test'
-require 'ostruct'
 module DATSauce
   class Test < BaseTest
     #   run_id: "The id of the run that this test object was created for"  ---- I want to use this to later link to the test run for display in the web app
@@ -32,28 +31,45 @@ module DATSauce
 
     def process_results(results, start_time)
 
-      run_time = start_time - Time.now
-      if count <= 1
-        @results[:primary] = {
-            :results =>results,
-            :results_summary => DATSauce::Cucumber::ResultsParser.summarize_results(results[:results]),
-            :pass_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:pass],
-            :fail_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:fail],
-            :failed_tests =>results[:failed_tests],
-            :run_time => (run_time.to_i * 1000)
-        }
+      # run_time = Time.now - start_time
+      if @run_count <= 1
+        # TODO: need to abstract this results logic out into its own object
+        # @results[:primary] = {
+        #     :results =>results[:results],
+        #     :results_summary => DATSauce::Cucumber::ResultsParser.summarize_results(results[:results]),
+        #     :pass_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:pass],
+        #     :fail_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:fail],
+        #     :failed_tests =>results[:failed_tests].split,
+        #     :run_time => (run_time.to_i * 1000)
+        # }
+        # if @results[:primary][:failed_tests].empty? && @results[:primary][:fail_count].nil?
+        #   @status = 'Passed'
+        # else
+        #   @status = 'Failed'
+        # end
+        results = DATSauce::Result.new(results, start_time)
+        @results[:primary] = results
+        @status = results.status
+
       else
-        @results[:rerun] = {
-            :results =>results,
-            :results_summary => DATSauce::Cucumber::ResultsParser.summarize_results(results[:results]),
-            :pass_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:pass],
-            :fail_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:fail],
-            :failed_tests =>results[:failed_tests],
-            :run_time => (run_time.to_i * 1000)
-        }
+        # @results[:rerun] = {
+        #     :results =>results[:results],
+        #     :results_summary => DATSauce::Cucumber::ResultsParser.summarize_results(results[:results]),
+        #     :pass_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:pass],
+        #     :fail_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:fail],
+        #     :failed_tests =>results[:failed_tests].split,
+        #     :run_time => (run_time.to_i * 1000)
+        # }
+        # if @results[:rerun][:failed_tests].empty? && @results[:rerun][:fail_count].nil?
+        #   @status = 'Passed'
+        # else
+        #   @status = 'Failed'
+        # end
+        results = DATSauce::Result.new(results, start_time)
+        @results[:rerun] = results
+        @status = results.status
       end
 
-      @status = "Done"
     end
 
   end

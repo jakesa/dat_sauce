@@ -4,7 +4,8 @@ module DATSauce
       class << self
 
         def parse_tests(test_directory, options)
-          raise "#{test_directory} does not exist" unless Dir.exist? test_directory
+          # raise "#{test_directory} does not exist" unless File.exist?(test_directory)
+          # raise "#{test_directory} does not exist" unless Dir.exist? test_directory
           tests = dry_run([test_directory, options].compact.join(" ")).split("\n")
           # puts tests
           refined_tests =[]
@@ -12,16 +13,14 @@ module DATSauce
           tests.each do |test|
             refined_tests << test.gsub('\\','/')
           end
-          $stdout << "The number of scenarios found to be executed: #{refined_tests.count}"
-          $stdout << "\n"
+          puts "The number of scenarios found to be executed: #{refined_tests.count}"
           refined_tests
         end
 
         private
 
         def dry_run(cmd)
-          $stdout << "Preprocessing test files"
-          $stdout << "\n"
+          puts "Preprocessing test files"
 
           outputs = cmd.scan(/-f \S+/)
           outputs.each do |output|
