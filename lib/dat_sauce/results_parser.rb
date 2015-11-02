@@ -16,7 +16,8 @@ module DATSauce
           r_group_results = results_array.select {|l| l2 = l.scan(/^\d+ #{group}/); !l2.empty?}
           sum_up_lines(r_group_results, group)
         end.compact.join("\n")
-        aggregate_results << "\n#{sum_up_failed_scenarios(results_array)}"
+        # aggregate_results << "\n#{sum_up_failed_scenarios(results_array)}"
+        aggregate_results #not summing up the failed scenarios as they are collected elsewhere
       end
 
       def self.sum_up_lines(lines, group)

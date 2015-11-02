@@ -1,4 +1,5 @@
 require_relative 'base_test'
+require_relative 'progress'
 
 # TestRunObject?
 # {
@@ -23,7 +24,7 @@ module DATSauce
 
 
     # TODO: write a args parser for this instead of hard coding all of the attr_accessor values
-    def initialize(project, run_options, rerun, tests, event_emitter, runner_type, desired_caps)
+    def initialize(project, run_options, rerun, tests, event_emitter, runner_type, desired_caps, progress_bar = true)
       @project = project
       @tests = tests
       @test_count = @tests.length
@@ -35,7 +36,8 @@ module DATSauce
       @runner_type = runner_type
       @desired_caps = desired_caps
       @status = 'Initialized'
-      # @progress_bar = DATSauce::ProgressBar.new()
+      @progress_bar = DATSauce::Progress.new(@test_count) if progress_bar
+
     end
 
     def run
@@ -49,50 +51,62 @@ module DATSauce
 
     def create_test_objects(tests, run_options, run_id = @run_id)
       # report test creation
-      puts "Creating test objects"
+      # puts "Creating test objects"
+      @progress_bar.log "Creating test objects" if @progress_bar
       test_objects = []
       tests.each do |test|
-        test_objects << DATSauce::Test.new(run_id, test, run_options)
+        test_objects << DATSauce::Test.new(run_id, test, run_options, @progress_bar)
       end
-      puts test_objects
       test_objects
     end
 
     def get_queue_size
-      puts "Getting queue size: "
+      # puts "Getting queue size: "
+      @progress_bar.log('Getting queue size:') if @progress_bar
       if @runner_type == 'sauce'
         # get max concurrent tests from sauce and assign to @queue_size
-        @queue_size = 8 #this is hard coded for now. Will change later
+        @queue_size = 50 #this is hard coded for now. Will change later
       elsif @runner_type == 'grid'
         # get max nodes from grid
       elsif @runner_type == 'local'
-        @queue_size = 4
+        @queue_size = DATSauce::PlatformUtils.processor_count * 2
         # get max threads from platform utils
       end
-      puts "Size: #{@queue_size}"
+      # puts "Size: #{@queue_size}"
+      @progress_bar.log "Size: #{@queue_size}" if @progress_bar
       @queue_size
     end
 
     def start_test_run(test_objects)
-      puts "Starting test run"
+      # puts "Starting test run"
+      @progress_bar.log('Starting test run') if @progress_bar
+      # Thread.new(@progress_bar) {|p| loop do
+      #   p.refresh
+      #   sleep 1
+      # end
+      # }
       @status = "Running"
       start_time = Time.now
       threads = []
       get_queue_size.times do
+        @progress_bar.refresh if @progress_bar
         test = get_next_test(test_objects)
         threads << run_test(test) unless test.nil?
+        sleep 0.5 #this is an attempt at a stop gap for the account rental service not being able to handle multiple requests at once (accounts are being rented out when they should not be)
       end
       start_queue(test_objects, threads)
       process_run_results(test_objects, :primary, start_time)
 
       if @rerun
-        puts "This test run has been flagged for rerun. Starting rerun..."
+        # puts "This test run has been flagged for rerun. Starting rerun..."
+        @progress_bar.log('This test run has been flagged for rerun. Starting rerun...') if @progress_bar
         if there_are_failures?(test_objects)
           _start_time = Time.now
           start_rerun(test_objects)
           process_run_results(test_objects, :rerun, _start_time)
         else
-          puts "There were no failures detected. No rerun will be started"
+          # puts "There were no failures detected. No rerun will be started"
+          @progress_bar.log('There were no failures detected. No rerun will be started') if @progress_bar
         end
       end
 
@@ -109,23 +123,45 @@ module DATSauce
 
     def start_rerun(test_objects)
       threads = []
-      @queue_size.times do
-        test = get_next_rerun_test(test_objects)
-        break if test.nil?
-        threads << run_test(test)
-      end
-      if get_next_rerun_test(test_objects).nil?
-        puts "There were no more tests in queue for rerun. Waiting for current tests to finish..."
-        threads.each {|t| t.join}
+      rerun_count = get_rerun_count(test_objects)
+      if rerun_count > 0
+        @progress_bar.adjust_total rerun_count
+        @queue_size.times do
+          test = get_next_rerun_test(test_objects)
+          break if test.nil?
+          threads << run_test(test)
+        end
+        if get_next_rerun_test(test_objects).nil?
+          # puts "There were no more tests in queue for rerun. Waiting for current tests to finish..."
+          @progress_bar.log 'There were no more tests in queue for rerun. Waiting for current tests to finish...' if @progress_bar
+          threads.each {|t| t.join}
+        else
+          start_rerun_queue(test_objects, threads)
+        end
       else
-        start_rerun_queue(test_objects, threads)
+        @progress_bar.log 'There were no tests to rerun..' if @progress_bar
       end
+
+
+      # @queue_size.times do
+      #   test = get_next_rerun_test(test_objects)
+      #   break if test.nil?
+      #   threads << run_test(test)
+      # end
+      # if get_next_rerun_test(test_objects).nil?
+      #   puts "There were no more tests in queue for rerun. Waiting for current tests to finish..."
+      #   @progress_bar.log 'There were no more tests in queue for rerun. Waiting for current tests to finish...'
+      #   threads.each {|t| t.join}
+      # else
+      #   start_rerun_queue(test_objects, threads)
+      # end
     end
 
 
     #TODO: I can probably improve the performance here by doing some kind of caching. Will revisit later
     def start_queue(test_objects, threads)
-      puts "Test run started. Sending remaining tests to queue..."
+      # puts "Test run started. Sending remaining tests to queue..."
+      @progress_bar.log 'Test run started. Sending remaining tests to queue...' if @progress_bar
       test = get_next_test(test_objects)
       while test != nil
         if get_active_thread_count(threads) < @queue_size
@@ -133,14 +169,16 @@ module DATSauce
           test = get_next_test(test_objects)
         end
       end
-      puts 'Queue complete. Waiting for tests to finish running...'
+      # puts 'Queue complete. Waiting for tests to finish running...'
+      @progress_bar.log 'Queue complete. Waiting for tests to finish running...' if @progress_bar
       threads.each do |t|
         t.join
       end
     end
 
     def start_rerun_queue(test_objects, threads)
-      puts "Test rerun started. Sending remaining tests to queue..."
+      # puts "Test rerun started. Sending remaining tests to queue..."
+      @progress_bar.log 'Test rerun started. Sending remaining tests to queue...' if @progress_bar
       test = get_next_rerun_test(test_objects)
       while test != nil
         if get_active_thread_count(threads) < @queue_size
@@ -148,7 +186,8 @@ module DATSauce
           test = get_next_rerun_test(test_objects)
         end
       end
-      puts 'Queue complete. Waiting for current tests to finish...'
+      # puts 'Queue complete. Waiting for current tests to finish...'
+      @progress_bar.log 'Queue complete. Waiting for current tests to finish...' if @progress_bar
       threads.each {|t| t.join}
     end
 
@@ -161,6 +200,17 @@ module DATSauce
       end
       nil
     end
+
+    def get_rerun_count(test_objects)
+      count = 0
+      test_objects.each do |test|
+        if test.status == 'Failed'
+          count +=1
+        end
+      end
+      count
+    end
+
 
     def get_next_rerun_test(test_objects)
       test_objects.each do |test|
@@ -181,6 +231,7 @@ module DATSauce
       Thread.new(test) {|t| t.run}
     end
 
+    #TODO - add some progress bar modifications here while the results are being processed. This appears to take a while.
     def process_run_results(test_objects, run_type, start_time)
       primary_results_log = ''
       primary_run_time = 0
@@ -188,7 +239,9 @@ module DATSauce
       rerun_results_log = ''
       rerun_failures = []
       rerun_run_time = 0
+      progress_bar = DATSauce::Progress.new(test_objects.length, 'results') if @progress_bar
       test_objects.each do |test|
+        progress_bar.refresh if progress_bar
         if run_type == :primary
           primary_results_log << test.results[:primary].log
           primary_run_time += test.results[:primary].run_time
@@ -207,31 +260,11 @@ module DATSauce
           end
         end
       end
-
-
-      # @results[:primary] = {
-      #     :results =>primary_results_log,
-      #     :results_summary => DATSauce::Cucumber::ResultsParser.summarize_results(primary_results_log),
-      #     :pass_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:pass],
-      #     :fail_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:fail],
-      #     :failed_tests =>primary_failures,
-      #     :run_time => primary_run_time
-      # }
-
-
-      # @results[:rerun] = {
-      #     :results =>rerun_results_log,
-      #     :results_summary => DATSauce::Cucumber::ResultsParser.summarize_results(rerun_results_log),
-      #     :pass_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:pass],
-      #     :fail_count => DATSauce::Cucumber::ResultsParser.scenario_counts[:fail],
-      #     :failed_tests =>rerun_failures,
-      #     :run_time => rerun_run_time
-      # }
-      # @results[:run_time] = (Time.now - start_time)
-
+      progress_bar.finish if progress_bar
     end
 
     def summarize_results
+      @progress_bar.finish if @progress_bar
       puts "#############################"
       puts "Primary run results"
       puts "#{results[:primary].results_summary}"
