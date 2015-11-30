@@ -12,7 +12,7 @@ module DATSauce
 
     # pass the test the instance of the progress bar and update it when its completed?
     # this may cause some resource conflicts since the tests will be threaded.
-    def initialize(run_id, name, test_options, progress_bar)
+    def initialize(run_id, name, test_options, progress_bar, output=false, team_city=false)
       @run_id = run_id
       @run_count = 0
       @name = name
@@ -20,13 +20,15 @@ module DATSauce
       @status = "In Queue"
       @results = {:primary => nil, :rerun => nil}
       @progress_bar = progress_bar
+      @output = output
+      @team_city = team_city
     end
 
     def run
       @run_count += 1
       @status = "Running"
       time = Time.now
-      process_results(DATSauce::Cucumber::Runner.run_test(@name, @test_options, nil, @progress_bar), time)
+      process_results(DATSauce::Cucumber::Runner.run_test(@name, @test_options, nil, @progress_bar, @output, @team_city), time)
       @progress_bar.increment(1, @status) if @progress_bar
     end
 

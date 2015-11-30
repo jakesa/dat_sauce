@@ -7,7 +7,7 @@ module DATSauce
       class << self
 
         # TODO - need to add logic for detecting errors?
-        def run_test(test, options, run_id = nil, progress_bar = nil, output = true)
+        def run_test(test, options, run_id = nil, progress_bar = nil, output = true, team_city = false)
           ENV["AUTOTEST"] = "1" if $stdout.tty?
           _results = ''
           _options = ''
@@ -29,6 +29,7 @@ module DATSauce
           temp_file = Tempfile.new('test_run')
 
           outputs = _options.scan(/-f \S+/)
+
           if outputs.empty?
             io = Object::IO.popen("bundle exec cucumber #{test} #{_options} -f pretty -f rerun --out #{temp_file.path}")
           else
@@ -37,7 +38,9 @@ module DATSauce
 
           until io.eof? do
             result = io.gets
-            puts result if output
+
+            puts result if output && !team_city
+
             # progress_bar.log(result) if output
 
             _results += result
@@ -49,12 +52,19 @@ module DATSauce
           # progress_bar.log result_hash[:failed_tests]
           # progress_bar.log result_hash[:failed_tests].class
           # progress_bar.log result_hash[:failed_tests].empty?
-
+          DATSauce::TCMessageBuilder.start_test_suite test if team_city
+          DATSauce::TCMessageBuilder.start_test test if team_city
+          if output && team_city
+            # DATSauce::TCMessageBuilder.report_message :message => DATSauce::TCMessageBuilder.format_text(_results)
+            DATSauce::TCMessageBuilder.report_stdout test, DATSauce::TCMessageBuilder.format_text(_results)
+          end
           unless result_hash[:failed_tests].empty?
             # progress_bar.log _results
-            progress_bar.log result_hash[:failed_tests].to_s
+            DATSauce::TCMessageBuilder.test_failed(:name => test) if team_city
+            progress_bar.log result_hash[:failed_tests].to_s if progress_bar
           end
-
+          DATSauce::TCMessageBuilder.finish_test(test) if team_city
+          DATSauce::TCMessageBuilder.finish_test_suite test if team_city
           result_hash[:results] = _results
           result_hash
           # JSON.generate result_hash

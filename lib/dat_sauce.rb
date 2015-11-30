@@ -7,9 +7,9 @@ module DATSauce
   # initializer here DatSauce::CLI.new(runner, test_directory, ENV[SAUCE_USERNAME], ENV['SAUCE_KEY'], [test options] )
 
   # DATSauce.run_tests('Apollo', './features/login_and_session', ['-p dev_parallel', 'DRIVER=selenium', '-f Teamcity::Cucumber::Formatter'], true, 'local', nil,nil,false)
-  def self.run_tests(project, test_location, test_options, rerun, runner_type, event_emitter, desired_caps, progress_bar)
+  def self.run_tests(project, test_location, test_options, rerun, runner_type, event_emitter, desired_caps, number_of_processes, progress_bar, output=false, teamcity=false)
     tests = DATSauce::Cucumber::TestParser.parse_tests(test_location, test_options)
-    test_run = DATSauce::TestRun.new(project, test_options, rerun, tests, event_emitter, runner_type, desired_caps, progress_bar)
+    test_run = DATSauce::TestRun.new(project, test_options, rerun, tests, event_emitter, runner_type, desired_caps, number_of_processes, progress_bar, output, teamcity)
     test_run.run
   end
 end

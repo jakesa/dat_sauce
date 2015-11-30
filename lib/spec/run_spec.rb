@@ -14,5 +14,10 @@ describe 'DATSauce' do
     test_run.run
   end
 
+  it 'should report to Teamcity' do
+    tests = DATSauce::Cucumber::TestParser.parse_tests('./features/login_and_session/login.feature', ['-p dev_parallel', 'DRIVER=selenium'])
+    test_run = DATSauce::TestRun.new('Apollo', ['-p dev_parallel', 'DRIVER=selenium'], true, tests, nil, 'local', nil, nil, false, true, true)
+    test_run.run
+  end
 
 end

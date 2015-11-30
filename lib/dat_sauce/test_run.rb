@@ -24,7 +24,7 @@ module DATSauce
 
 
     # TODO: write a args parser for this instead of hard coding all of the attr_accessor values
-    def initialize(project, run_options, rerun, tests, event_emitter, runner_type, desired_caps, progress_bar = true)
+    def initialize(project, run_options, rerun, tests, event_emitter, runner_type, desired_caps, number_of_processes=nil, progress_bar=true, output=false, team_city=false)
       @project = project
       @tests = tests
       @test_count = @tests.length
@@ -37,7 +37,9 @@ module DATSauce
       @desired_caps = desired_caps
       @status = 'Initialized'
       @progress_bar = DATSauce::Progress.new(@test_count) if progress_bar
-
+      @team_city = team_city
+      @output = output
+      @number_of_processes = number_of_processes
     end
 
     def run
@@ -55,7 +57,7 @@ module DATSauce
       @progress_bar.log "Creating test objects" if @progress_bar
       test_objects = []
       tests.each do |test|
-        test_objects << DATSauce::Test.new(run_id, test, run_options, @progress_bar)
+        test_objects << DATSauce::Test.new(run_id, test, run_options, @progress_bar, @output, @team_city)
       end
       test_objects
     end
@@ -63,7 +65,9 @@ module DATSauce
     def get_queue_size
       # puts "Getting queue size: "
       @progress_bar.log('Getting queue size:') if @progress_bar
-      if @runner_type == 'sauce'
+      if @number_of_processes
+        @queue_size = @number_of_processes
+      elsif @runner_type == 'sauce'
         # get max concurrent tests from sauce and assign to @queue_size
         @queue_size = 50 #this is hard coded for now. Will change later
       elsif @runner_type == 'grid'
@@ -80,6 +84,7 @@ module DATSauce
     def start_test_run(test_objects)
       # puts "Starting test run"
       @progress_bar.log('Starting test run') if @progress_bar
+      DATSauce::TCMessageBuilder.start_test_suite @run_id if @team_city
       # Thread.new(@progress_bar) {|p| loop do
       #   p.refresh
       #   sleep 1
@@ -96,14 +101,16 @@ module DATSauce
       end
       start_queue(test_objects, threads)
       process_run_results(test_objects, :primary, start_time)
-
+      DATSauce::TCMessageBuilder.finish_test_suite @run_id if @team_city
       if @rerun
         # puts "This test run has been flagged for rerun. Starting rerun..."
         @progress_bar.log('This test run has been flagged for rerun. Starting rerun...') if @progress_bar
         if there_are_failures?(test_objects)
+          DATSauce::TCMessageBuilder.start_test_suite @run_id + '-rerun' if @team_city
           _start_time = Time.now
           start_rerun(test_objects)
           process_run_results(test_objects, :rerun, _start_time)
+          DATSauce::TCMessageBuilder.finish_test_suite @run_id + '-rerun' if @team_city
         else
           # puts "There were no failures detected. No rerun will be started"
           @progress_bar.log('There were no failures detected. No rerun will be started') if @progress_bar
@@ -125,7 +132,7 @@ module DATSauce
       threads = []
       rerun_count = get_rerun_count(test_objects)
       if rerun_count > 0
-        @progress_bar.adjust_total rerun_count
+        @progress_bar.adjust_total rerun_count if @progress_bar
         @queue_size.times do
           test = get_next_rerun_test(test_objects)
           break if test.nil?
@@ -233,6 +240,8 @@ module DATSauce
 
     #TODO - add some progress bar modifications here while the results are being processed. This appears to take a while.
     def process_run_results(test_objects, run_type, start_time)
+      DATSauce::TCMessageBuilder.progress_message('Processing results...') if @team_city
+
       primary_results_log = ''
       primary_run_time = 0
       primary_failures = []
@@ -275,6 +284,8 @@ module DATSauce
         puts "#{results[:rerun].results_summary}"
         puts "Took #{calculate_runtime(results[:rerun].run_time)}"
         puts "#############################"
+        puts "Failures:"
+        puts results[:rerun].failed_tests
       end
       puts "Total Runtime: #{calculate_runtime(results[:run_time])}"
     end

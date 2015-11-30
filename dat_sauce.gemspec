@@ -5,7 +5,7 @@ require 'dat_sauce/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "dat_sauce"
-  spec.version       = DatSauce::VERSION
+  spec.version       = DATSauce::VERSION
   spec.authors       = ["jakesa"]
   spec.email         = ["jakes55214@yahoo.com"]
   spec.summary       = 'Ruby wrapper for parallel and distributed Cucumber tests on SauceLabs'
