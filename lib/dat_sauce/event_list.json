@@ -1,0 +1,19 @@
+{
+  "Events": ["StartTestRun",
+    "StopTestRun",
+    "TestRunCompleted",
+    "TestCreated",
+    "StartTest",
+    "StopTest",
+    "TestCompleted",
+    "InfoMessage",
+    "DebugMessage",
+
+
+  ]
+}
+
+//Debug and Info messages are meant to replay messages to the console
+//Other specifically named events are meant to have an impact on either the progressbar, teamcity output of be written to the database
+//Pass test and testrun objects into the events, that way we can extract the necessary information for reporting to either the progress_bar, teamcity
+//or the mongo database.

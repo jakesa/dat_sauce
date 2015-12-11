@@ -235,7 +235,9 @@ module DATSauce
     end
 
     def run_test(test)
-      Thread.new(test) {|t| t.run}
+      Thread.new(test) {|t| t.run} # event_emitter.test_completed(t) /after the test is completed emit the test completion event and send the test object to the emitter
+      # this keeps the emitter out of the test object while only sending it one thread deep. Hopefully I dont run into resource conflicts here.
+      # also, perhaps it would be best to do results parsing here rather than at the end of the run
     end
 
     #TODO - add some progress bar modifications here while the results are being processed. This appears to take a while.
