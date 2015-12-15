@@ -5,7 +5,7 @@ module DATSauce
 
     def to_hash
       obj = {}
-      Test.attrs.each do |attr|
+      Test.attrs.each do |attr| #need to fix this. this looks at the Test class specifically and not whatever child class called it
         obj[attr] = send(attr)
       end
       obj
@@ -17,7 +17,7 @@ module DATSauce
 
     def to_s(log = false)
       str = ''
-      Test.attrs.each do |attr|
+      Test.attrs.each do |attr| #need to fix this. this looks at the Test class specifically and not whatever child class called it
         str << "#{attr}: #{send(attr)}\n" unless attr == :log && !log
       end
     end

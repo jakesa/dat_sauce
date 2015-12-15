@@ -1,5 +1,6 @@
 require_relative 'base_test'
 require_relative 'progress'
+require_relative 'event_emitter'
 
 # TestRunObject?
 # {
@@ -23,8 +24,9 @@ module DATSauce
                          :tests, :runner_type, :desired_caps, :queue_size, :results, :status
 
 
-    # TODO: write a args parser for this instead of hard coding all of the attr_accessor values
-    def initialize(project, run_options, rerun, tests, event_emitter, runner_type, desired_caps, number_of_processes=nil, progress_bar=true, output=false, team_city=false)
+    # TODO: write a args parser for this instead of hard coding all of the attr_accessor values.
+    # I really want to store these in a json config file.
+    def initialize(project, run_options, tests, rerun, event_emitter_type, record_to_database, runner_type, number_of_processes=nil, desired_caps=nil)
       @project = project
       @tests = tests
       @test_count = @tests.length
@@ -32,39 +34,38 @@ module DATSauce
       @rerun = rerun
       @results = {:primary => nil, :rerun => nil}
       @run_id = generate_run_id
-      @event_emitter = event_emitter
+      @event_emitter = DATSauce::EventEmitter.new(event_emitter_type, record_to_database)
       @runner_type = runner_type
       @desired_caps = desired_caps
       @status = 'Initialized'
-      @progress_bar = DATSauce::Progress.new(@test_count) if progress_bar
-      @team_city = team_city
-      @output = output
       @number_of_processes = number_of_processes
     end
 
     def run
       @status = 'Started'
-      # test_objects =
       start_test_run(create_test_objects(@tests, @run_options, @run_id))
       puts summarize_results
+    end
+
+    def stop
+      #TODO: implement this for a graceful shutdown of the test run.
     end
 
     private
 
     def create_test_objects(tests, run_options, run_id = @run_id)
-      # report test creation
-      # puts "Creating test objects"
-      @progress_bar.log "Creating test objects" if @progress_bar
+      @event_emitter.emit_event(:info => "Creating test objects")
       test_objects = []
       tests.each do |test|
-        test_objects << DATSauce::Test.new(run_id, test, run_options, @progress_bar, @output, @team_city)
+        test_object = DATSauce::Test.new(run_id, test, run_options)
+        test_objects << test_object
+        @event_emitter.emit_event(:test_creation => test_object)
       end
       test_objects
     end
 
     def get_queue_size
       # puts "Getting queue size: "
-      @progress_bar.log('Getting queue size:') if @progress_bar
       if @number_of_processes
         @queue_size = @number_of_processes
       elsif @runner_type == 'sauce'
@@ -77,48 +78,37 @@ module DATSauce
         # get max threads from platform utils
       end
       # puts "Size: #{@queue_size}"
-      @progress_bar.log "Size: #{@queue_size}" if @progress_bar
       @queue_size
     end
 
     def start_test_run(test_objects)
-      # puts "Starting test run"
-      @progress_bar.log('Starting test run') if @progress_bar
-      DATSauce::TCMessageBuilder.start_test_suite @run_id if @team_city
-      # Thread.new(@progress_bar) {|p| loop do
-      #   p.refresh
-      #   sleep 1
-      # end
-      # }
+
+      @event_emitter.emit_event :start_test_run => self
+      @event_emitter.emit_event :info => 'Starting test run'
       @status = "Running"
       start_time = Time.now
       threads = []
       get_queue_size.times do
-        @progress_bar.refresh if @progress_bar
         test = get_next_test(test_objects)
         threads << run_test(test) unless test.nil?
         sleep 0.5 #this is an attempt at a stop gap for the account rental service not being able to handle multiple requests at once (accounts are being rented out when they should not be)
       end
       start_queue(test_objects, threads)
       process_run_results(test_objects, :primary, start_time)
-      DATSauce::TCMessageBuilder.finish_test_suite @run_id if @team_city
       if @rerun
         # puts "This test run has been flagged for rerun. Starting rerun..."
-        @progress_bar.log('This test run has been flagged for rerun. Starting rerun...') if @progress_bar
+        @event_emitter.emit_event :info => 'This test run has been flagged for rerun. Starting rerun...'
         if there_are_failures?(test_objects)
-          DATSauce::TCMessageBuilder.start_test_suite @run_id + '-rerun' if @team_city
           _start_time = Time.now
           start_rerun(test_objects)
           process_run_results(test_objects, :rerun, _start_time)
-          DATSauce::TCMessageBuilder.finish_test_suite @run_id + '-rerun' if @team_city
         else
-          # puts "There were no failures detected. No rerun will be started"
-          @progress_bar.log('There were no failures detected. No rerun will be started') if @progress_bar
+          @event_emitter.emit_event :info => 'There were no failures detected. A rerun is not necessary and will not be run.'
         end
       end
 
       @results[:run_time] = Time.now - start_time
-
+      @event_emitter.emit_event :test_run_completed => self
     end
 
     def there_are_failures?(test_objects)
@@ -132,43 +122,27 @@ module DATSauce
       threads = []
       rerun_count = get_rerun_count(test_objects)
       if rerun_count > 0
-        @progress_bar.adjust_total rerun_count if @progress_bar
         @queue_size.times do
           test = get_next_rerun_test(test_objects)
           break if test.nil?
           threads << run_test(test)
         end
         if get_next_rerun_test(test_objects).nil?
-          # puts "There were no more tests in queue for rerun. Waiting for current tests to finish..."
-          @progress_bar.log 'There were no more tests in queue for rerun. Waiting for current tests to finish...' if @progress_bar
+          @event_emitter.emit_event :info => 'There are no more tests in the queue. Waiting for current tests to finish...'
           threads.each {|t| t.join}
         else
           start_rerun_queue(test_objects, threads)
         end
       else
-        @progress_bar.log 'There were no tests to rerun..' if @progress_bar
+        @event_emitter.emit_event :info => 'There were no tests to rerun'
       end
 
-
-      # @queue_size.times do
-      #   test = get_next_rerun_test(test_objects)
-      #   break if test.nil?
-      #   threads << run_test(test)
-      # end
-      # if get_next_rerun_test(test_objects).nil?
-      #   puts "There were no more tests in queue for rerun. Waiting for current tests to finish..."
-      #   @progress_bar.log 'There were no more tests in queue for rerun. Waiting for current tests to finish...'
-      #   threads.each {|t| t.join}
-      # else
-      #   start_rerun_queue(test_objects, threads)
-      # end
     end
 
 
     #TODO: I can probably improve the performance here by doing some kind of caching. Will revisit later
     def start_queue(test_objects, threads)
-      # puts "Test run started. Sending remaining tests to queue..."
-      @progress_bar.log 'Test run started. Sending remaining tests to queue...' if @progress_bar
+      @event_emitter.emit_event :info => 'All test processes full. Sending remaining tests to the test queue...'
       test = get_next_test(test_objects)
       while test != nil
         if get_active_thread_count(threads) < @queue_size
@@ -176,16 +150,14 @@ module DATSauce
           test = get_next_test(test_objects)
         end
       end
-      # puts 'Queue complete. Waiting for tests to finish running...'
-      @progress_bar.log 'Queue complete. Waiting for tests to finish running...' if @progress_bar
+      @event_emitter.emit_event :info => 'Queue complete. Waiting for tests to finish running...'
       threads.each do |t|
         t.join
       end
     end
 
     def start_rerun_queue(test_objects, threads)
-      # puts "Test rerun started. Sending remaining tests to queue..."
-      @progress_bar.log 'Test rerun started. Sending remaining tests to queue...' if @progress_bar
+      @event_emitter.emit_event :info => 'All test processes full. Sending remaining tests to the test queue...'
       test = get_next_rerun_test(test_objects)
       while test != nil
         if get_active_thread_count(threads) < @queue_size
@@ -193,8 +165,7 @@ module DATSauce
           test = get_next_rerun_test(test_objects)
         end
       end
-      # puts 'Queue complete. Waiting for current tests to finish...'
-      @progress_bar.log 'Queue complete. Waiting for current tests to finish...' if @progress_bar
+      @event_emitter.emit_event :info => 'Queue completed. Waiting for current tests to finish...'
       threads.each {|t| t.join}
     end
 
@@ -208,6 +179,7 @@ module DATSauce
       nil
     end
 
+    #TODO: need to revisit this, make sure its working the way I think it does
     def get_rerun_count(test_objects)
       count = 0
       test_objects.each do |test|
@@ -235,14 +207,19 @@ module DATSauce
     end
 
     def run_test(test)
-      Thread.new(test) {|t| t.run} # event_emitter.test_completed(t) /after the test is completed emit the test completion event and send the test object to the emitter
+      Thread.new(test) {|t|
+        @event_emitter.emit_event :test_started => t
+        t.run
+        @event_emitter.emit_event :test_completed => t
+
+      } # event_emitter.test_completed(t) /after the test is completed emit the test completion event and send the test object to the emitter
       # this keeps the emitter out of the test object while only sending it one thread deep. Hopefully I dont run into resource conflicts here.
       # also, perhaps it would be best to do results parsing here rather than at the end of the run
     end
 
     #TODO - add some progress bar modifications here while the results are being processed. This appears to take a while.
     def process_run_results(test_objects, run_type, start_time)
-      DATSauce::TCMessageBuilder.progress_message('Processing results...') if @team_city
+      @event_emitter.emit_event :info => "Processing results. This may take a minute..."
 
       primary_results_log = ''
       primary_run_time = 0
@@ -250,9 +227,8 @@ module DATSauce
       rerun_results_log = ''
       rerun_failures = []
       rerun_run_time = 0
-      progress_bar = DATSauce::Progress.new(test_objects.length, 'results') if @progress_bar
+      @event_emitter.emit_event :update_stats => '' #this needs to be an object not a string. will implement later
       test_objects.each do |test|
-        progress_bar.refresh if progress_bar
         if run_type == :primary
           primary_results_log << test.results[:primary].log
           primary_run_time += test.results[:primary].run_time
@@ -271,11 +247,10 @@ module DATSauce
           end
         end
       end
-      progress_bar.finish if progress_bar
+
     end
 
     def summarize_results
-      @progress_bar.finish if @progress_bar
       puts "#############################"
       puts "Primary run results"
       puts "#{results[:primary].results_summary}"
@@ -292,16 +267,6 @@ module DATSauce
       puts "Total Runtime: #{calculate_runtime(results[:run_time])}"
     end
 
-
-    def update_stats
-      #TODO: Need to rethink this. Its just going to update the count over and over again.
-      #Proccess.spawn {
-      # @test_objects.each do |test|
-      #   if test.status == "Done"
-      #     @pass_count += test.pass_count
-      #     @fail_count += test.fail_count
-      # }
-    end
 
     def calculate_runtime(time)
       Time.at(time).utc.strftime("%H:%M:%S")

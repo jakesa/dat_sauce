@@ -1,6 +1,5 @@
 require 'curses'
 
-
 module DATSauce
 
   class ProgressBar
@@ -8,7 +7,7 @@ module DATSauce
     attr_accessor :current_count, :count, :current_progress
 
     #params for initializing progress bar
-    def initialize(params)
+    def initialize(params={})
       @bar_index = 1
       @text_index = 0
       Curses.noecho
@@ -17,13 +16,10 @@ module DATSauce
     end
 
     def start_progress
-      # Curses.setpos(@bar_index, 0)
-      # Curses.addstr(progress_bar_open)
-      # Curses.refresh
+      Curses.init_screen
       @current_count = 0
       @current_progress = ""
       output_to_curses @bar_index, 0, progress_bar_open
-      Curses.init_screen
     end
 
     def increment(by)
@@ -31,7 +27,7 @@ module DATSauce
       #need to improve this
       progress = "=" * by
       @current_progress << progress unless progress.empty?
-      if @current_count >= @count
+      if @current_count > @count
         finish
       end
     end
@@ -77,6 +73,58 @@ module DATSauce
       Curses.addstr(message)
       Curses.refresh
     end
+
+  end
+
+  class ProgressBarEventHandler
+
+    def initialize
+
+    end
+
+    def process_event(event={})
+      event.each do |key,value|
+        begin
+          # puts key
+          # puts value
+          send(key.to_sym, value)
+        rescue NoMethodError
+          nil #catch an event that has not been implemented
+        end
+      end
+
+
+    end
+
+    private
+
+    def start_test_run(test_run)
+      @progress_bar = DATSauce::ProgressBar.new({:count => test_run.test_count})
+      @progress_bar.start_progress
+      @progress_bar.start_timer
+    end
+
+    def test_run_completed(test_run)
+      @progress_bar.finish
+      #TODO: may do something with the test object here.
+    end
+
+    def test_completed(test)
+      @progress_bar.increment 1
+      # failed_tests = (
+      # if test.results[:rerun].nil?
+      #   test.results[:primary].failed_tests
+      # else
+      #   test.results[:rerun].failed_tests
+      # end
+      # )
+      # @progress_bar.output failed_tests
+    end
+
+    def info(message)
+      @progress_bar.output message
+    end
+
 
   end
 

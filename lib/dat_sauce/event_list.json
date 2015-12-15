@@ -1,16 +1,13 @@
 {
-  "Events": ["StartTestRun",
-    "StopTestRun",
-    "TestRunCompleted",
-    "TestCreated",
-    "StartTest",
-    "StopTest",
-    "TestCompleted",
-    "InfoMessage",
-    "DebugMessage",
-
-
-  ]
+  "Events": ["start_test_run",
+    "stop_test_run",
+    "test_run_completed",
+    "test_created",
+    "start_test",
+    "stop_test",
+    "test_completed",
+    "info",
+    "debug"]
 }
 
 //Debug and Info messages are meant to replay messages to the console

@@ -5,67 +5,68 @@ module DATSauce
 
   class EventEmitter
 
-    # class << self
-    #
-    #   TYPES = ['DATABASE', 'TEAMCITY']
-    #
-    #   def emit_event(params={})
-    #
-    #     case params[:type].upcase
-    #       when 'DATABASE'
-    #         #implement database write here
-    #       when 'TEAMCITY'
-    #         emit_team_city_event(params)
-    #       else
-    #         raise "#{type} is not a valid type. Valid type are: #{TYPES.to_s}"
-    #     end
-    #
-    #   end
-    #
-    #   def emit_team_city_event(params={})
-    #     # :event, params ={}
-    #     case params[:event]
-    #       when 'start_test'
-    #         DATSauce::TCMessageBuilder.start_test params[:name]
-    #       when 'finish_test'
-    #         DATSauce::TCMessageBuilder.finish_test params[:name]
-    #       when 'start_test_suite'
-    #         DATSauce::TCMessageBuilder.start_test_suite params[:name]
-    #       when 'finish_test_suite'
-    #         DATSauce::TCMessageBuilder.finish_test_suite params[:name]
-    #       when 'test_failed'
-    #         DATSauce::TCMessageBuilder.test_failed params
-    #       when 'report_run_statistics'
-    #         DATSauce::TCMessageBuilder.report_run_statistics params
-    #       when 'report_message'
-    #         DATSauce::TCMessageBuilder.report_message params
-    #       else
-    #         # TODO - add a list output to this error message
-    #         raise "#{params[:event]} is not a valid TeamCity event"
-    #     end
-    #   end
-    #
-    #
-    # end
+    attr_accessor :type
 
-    def initialize(type)
+    def initialize(type, db=false)
       #progress bar, TeamCity, MongoDB
       @type = type
-      # may want to instanciate instances of each types specific emitter. Like ProgressBar, TeamCity
+      case type
+        when 'progress_bar'
+          @emitter = DATSauce::ProgressBarEventHandler.new # maybe this should be ProcessBarEventHandler
+        when 'team_city'
+          @emitter = DATSauce::TCEventHandler.new
+        else
+          @emitter = nil
+          raise "#{type} is not a valid type. Call #types to get a list of valid types"
+      end
+      @db = DATSauce::DataBase.new if db # class for sending database events to the node.js app
+      # TODO: may want to add some connection tests in the Database class for making sure it can reach the server
     end
 
     # event = {:type, :message}
     def emit_event(event={})
-      case @type
-        when 'progress_bar'
-          #emit to the progress bar
-        when 'teamcity'
-          #emit team city message
-        when 'db'
-          #emit message to database
-        else
-          raise "type not set"
+      @emitter.process_event(event)
+
+      if @db && db_event?(event)
+        #emit database event
+        @db.process_event(event)
       end
+    end
+
+    def types
+      t = ['progress_bar', 'team_city']
+      puts t
+      t
+    end
+
+    def db_event?(event)
+      db_events.include? event
+    end
+
+    def event?(event)
+      events.include? event
+    end
+
+    def events
+      ["start_test_run",
+       "stop_test_run",
+       "test_run_completed",
+       "test_created",
+       "start_test",
+       "stop_test",
+       "test_completed",
+       "info",
+       "debug"]
+    end
+
+    def db_events
+      ["start_test_run",
+       "stop_test_run",
+       "test_run_completed",
+       "test_created",
+       "start_test",
+       "stop_test",
+       "test_completed"]
     end
 
   end
