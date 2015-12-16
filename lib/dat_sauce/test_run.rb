@@ -209,7 +209,7 @@ module DATSauce
 
     def run_test(test)
       Thread.new(test) {|t|
-        @event_emitter.emit_event :test_started => t
+        @event_emitter.emit_event :start_test => t
         t.run
         @event_emitter.emit_event :test_completed => t
 

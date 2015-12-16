@@ -112,6 +112,10 @@ module DATSauce
       @progress_bar.start_timer
     end
 
+    def stop_test_run(test_run)
+
+    end
+
     def test_run_completed(test_run)
       @progress_bar.finish
       #TODO: may do something with the test object here.

@@ -1,6 +1,7 @@
 module DATSauce
 
   class TCMessageBuilder
+    attr_accessor :run_id, :rerun_id
 
       # testSuiteStarted
         # testStarted
@@ -166,7 +167,9 @@ module DATSauce
     private
 
     def start_test_run(test_run)
-
+      @tc_message_builder = TCMessageBuilder.new
+      @tc_message_builder.start_test_suite test_run.run_id
+      @tc_message_builder.run_id = test_run.run_id
     end
 
     def stop_test_run(test_run)
@@ -174,33 +177,45 @@ module DATSauce
     end
 
     def start_rerun(count)
-
+      @tc_message_builder.rerun_id = @tc_message_builder.run_id + Time.now.to_i.to_s
+      @tc_message_builder.start_test_suite(@tc_message_builder.rerun_id)
     end
 
     def test_run_completed(test_run)
+      @tc_message_builder.finish_test_suite(@tc_message_builder.rerun_id) unless @tc_message_builder.rerun_id.nil?
+      @tc_message_builder.finish_test_suite(@tc_message_builder.run_id)
 
     end
 
     def start_test(test)
-
+      @tc_message_builder.start_test test.name
     end
 
     def test_completed(test)
+      if test.results[:rerun].nil?
+        if test.results[:primary].status == 'Passed'
+          @tc_message_builder.finish_test test.name
+        else
+          @tc_message_builder.test_failed({:name => test.name})
+          @tc_message_builder.finish_test test.name
+        end
+      else
+        if test.results[:rerun].status == 'Passed'
+          @tc_message_builder.finish_test test.name
+        else
+          @tc_message_builder.report_stdout(test.name, @tc_message_builder.format_text(test.results[:rerun].log))
+          @tc_message_builder.test_failed({:name => test.name})
+          @tc_message_builder.finish_test test.name
+        end
+      end
 
     end
 
     def info(message)
-
+      @tc_message_builder.report_message({:message => message})
     end
 
 
-
-
-
-
   end
-
-
-
 
 end
