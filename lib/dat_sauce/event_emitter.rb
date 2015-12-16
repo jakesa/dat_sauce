@@ -50,6 +50,7 @@ module DATSauce
     def events
       ["start_test_run",
        "stop_test_run",
+       "start_rerun",
        "test_run_completed",
        "test_created",
        "start_test",

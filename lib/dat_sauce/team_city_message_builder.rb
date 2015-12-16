@@ -1,7 +1,7 @@
 module DATSauce
 
-  module TCMessageBuilder
-    class << self
+  class TCMessageBuilder
+
       # testSuiteStarted
         # testStarted
           # testStdOut
@@ -159,8 +159,48 @@ module DATSauce
         new_text
       end
 
-    end
   end
+
+  class TCEventHandler < DATSauce::EventHandler
+
+    private
+
+    def start_test_run(test_run)
+
+    end
+
+    def stop_test_run(test_run)
+
+    end
+
+    def start_rerun(count)
+
+    end
+
+    def test_run_completed(test_run)
+
+    end
+
+    def start_test(test)
+
+    end
+
+    def test_completed(test)
+
+    end
+
+    def info(message)
+
+    end
+
+
+
+
+
+
+  end
+
+
 
 
 end

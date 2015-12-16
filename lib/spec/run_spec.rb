@@ -15,14 +15,14 @@ describe 'DATSauce' do
   end
 
   it 'should report to Teamcity' do
-    tests = DATSauce::Cucumber::TestParser.parse_tests('./features/login_and_session/login.feature', ['-p dev_parallel', 'DRIVER=selenium'])
+    tests = DATSauce::Cucumber::TestParser.parse_tests('./features/login_and_session', ['-p dev', 'DRIVER=selenium'])
     test_run = DATSauce::TestRun.new('Apollo', ['-p dev_parallel', 'DRIVER=selenium'], tests, true, 'progress_bar', false, 'local', 4)
     test_run.run
   end
 
   it 'should use the new event emitter' do
-    tests = DATSauce::Cucumber::TestParser.parse_tests('./features/login_and_session', ['-p dev_parallel', 'DRIVER=selenium'])
-    test_run = DATSauce::TestRun.new('Apollo', ['-p dev_parallel', 'DRIVER=selenium'], tests, true, 'progress_bar', false, 'local', 4)
+    tests = DATSauce::Cucumber::TestParser.parse_tests('./features/common/location_autosuggest.feature', ['-p dev_parallel', 'DRIVER=selenium'])
+    test_run = DATSauce::TestRun.new('Apollo', ['-p dev_parallel', 'DRIVER=selenium'], tests, true, 'progress_bar', false, 'local')
     test_run.run
   end
 

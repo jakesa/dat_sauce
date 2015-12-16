@@ -96,7 +96,6 @@ module DATSauce
       start_queue(test_objects, threads)
       process_run_results(test_objects, :primary, start_time)
       if @rerun
-        # puts "This test run has been flagged for rerun. Starting rerun..."
         @event_emitter.emit_event :info => 'This test run has been flagged for rerun. Starting rerun...'
         if there_are_failures?(test_objects)
           _start_time = Time.now
@@ -121,6 +120,8 @@ module DATSauce
     def start_rerun(test_objects)
       threads = []
       rerun_count = get_rerun_count(test_objects)
+      # this logic is redundant. We check for failures before this method is called. Need to refactor
+      @event_emitter.emit_event(:start_rerun => rerun_count)
       if rerun_count > 0
         @queue_size.times do
           test = get_next_rerun_test(test_objects)
