@@ -1,4 +1,4 @@
-require_relative 'spec_helper'
+require_relative '../../lib/dat_sauce'
 
 describe 'DATSauce' do
 
@@ -22,8 +22,15 @@ describe 'DATSauce' do
 
   it 'should use the new event emitter' do
     tests = DATSauce::Cucumber::TestParser.parse_tests('./features/common/location_autosuggest.feature', ['-p dev_parallel', 'DRIVER=selenium'])
-    test_run = DATSauce::TestRun.new('Apollo', ['-p dev_parallel', 'DRIVER=selenium'], tests, true, 'progress_bar', false, 'local')
+    test_run = DATSauce::TestRun.new('Apollo', ['-p dev_parallel', 'DRIVER=selenium'], tests, true, 'team_city', false, 'local')
     test_run.run
+  end
+
+  it 'should run from dat_sauce gem' do
+    # tests = DATSauce::Cucumber::TestParser.parse_tests('./features/common/location_autosuggest.feature', ['-p dev_parallel', 'DRIVER=selenium'])
+    # test_run = DATSauce::TestRun.new('Apollo', ['-p dev_parallel', 'DRIVER=selenium'], tests, true, 'progress_bar', false, 'local')
+    # test_run.run
+    DATSauce.run_tests('Apollo', './features/login_and_session', ["-p dev_parallel", "DRIVER=selenium"], true, 'team_city', false, 'local', 10)
   end
 
 end
