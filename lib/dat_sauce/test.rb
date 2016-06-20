@@ -29,11 +29,11 @@ module DATSauce
     def process_results(results, start_time)
 
       if @run_count <= 1
-        results = DATSauce::Result.new(results, start_time)
+        results = DATSauce::Result.new(results, start_time, @run_id, 'primary')
         @results[:primary] = results
         @status = results.status
       else
-        results = DATSauce::Result.new(results, start_time)
+        results = DATSauce::Result.new(results, start_time, @run_id, 'rerun')
         @results[:rerun] = results
         @status = results.status
       end

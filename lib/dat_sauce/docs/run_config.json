@@ -1,0 +1,47 @@
+{
+  ":project":{
+    "value_type" : "String",
+    "description" : "The name of the project that this run is for.",
+    "example" : "Apollo",
+    "available_options" : ["Apollo", "Rateview", "Express", "Siebel"]
+  },
+  ":test_location": {
+    "value_type" : "String",
+    "description" : "The directory location of the tests that you want to run",
+    "example" : "./features/login_and_session/login.feature"
+  },
+  ":test_options" : {
+    "value_type" : "Array",
+    "description" : "An array of Cucumber run options to be used for the test run",
+    "example" : "['-p dev_parallel', 'DRIVER=selenium']"
+  },
+  ":rerun" : {
+    "value_type" : "Boolean",
+    "description" : "Tells the runner whether or not to do a rerun if there are any failures",
+    "example" : "true",
+    "available_options" : [true, false]
+  },
+  ":event_emitter_type" : {
+    "value_type" : "String",
+    "description" : "A string telling the running which event emitter to use for progress reporting",
+    "example" : "progress_bar",
+    "available_options" : ["progress_bar", "team_city"]
+  },
+  ":record_to_database" : {
+    "value_type" : "Boolean",
+    "description" : "Tells the runner whether or not to record to the database so that the results can be viewed via the web app",
+    "example" : "true",
+    "available_options" : [true, false]
+  },
+  ":runner_type" : {
+    "value_type" : "String",
+    "description" : "Tells the runner which runner type to use. This value is used to decide how many workers/working threads to use for the test run. This can be overridden by :number_of_processes",
+    "example" : "local",
+    "available_options" : ["local", "grid"]
+  },
+  ":number_of_processes" : {
+    "value_type" : "Integer",
+    "description" : "Explicitly tell the runner how many worker threads you want to use in the test run. This will override the value passed for :runner_type",
+    "example" : 10
+  }
+}

@@ -45,8 +45,6 @@ module DATSauce
       end
 
       def test_failed(params={})
-        # test_name, message, details, expected, actual
-        # p "#{PREFIX}[testFailed name='#{params[:name]}' flowId='#{params[:name]}' message='#{params[:message]}' errorDetails='#{params[:details]}' expected='#{params[:expected]}' actual='#{params[:actual]}']"
         "#{PREFIX}[testFailed name='#{params[:name]}' flowId='#{params[:flow_id].nil? ? params[:name] : params[:flow_id]}']"
       end
 
@@ -59,9 +57,6 @@ module DATSauce
       end
 
       def report_message(params)
-        # message, error_details=nil, status=nil
-        # error_details = "errorDetails='#{params[:error_details]}'" unless params[:error_details].nil?
-        # status = "status=#{STATUS[params[:status]]}" unless params[:status].nil?
         "#{PREFIX}[message text='#{params[:message]}']"
       end
 
@@ -106,23 +101,15 @@ module DATSauce
     def test_run_completed(test_run)
       render_output @tc_message_builder.finish_test_suite(@tc_message_builder.rerun_id) unless @tc_message_builder.rerun_id.nil?
       render_output @tc_message_builder.finish_test_suite(@tc_message_builder.run_id)
-
     end
 
-    # def start_test(test)
-    #   @tc_message_builder.start_test test.name
-    # end
 
     def test_completed(test)
       if test.results[:rerun].nil?
         if test.results[:primary].status == 'Passed'
           render_output "#{@tc_message_builder.start_test(test.name)}\n#{@tc_message_builder.finish_test(test.name)}"
-
-          # @tc_message_builder.finish_test test.name
         else
           render_output "#{@tc_message_builder.start_test(test.name)}\n#{@tc_message_builder.test_failed({:name => test.name})}\n#{@tc_message_builder.finish_test(test.name)}"
-          # @tc_message_builder.test_failed({:name => test.name})
-          # @tc_message_builder.finish_test test.name
         end
       else
         if test.results[:rerun].status == 'Passed'
@@ -130,9 +117,6 @@ module DATSauce
         else
           flow_id = test.name + Time.now.to_i.to_s
           render_output "#{@tc_message_builder.start_test(test.name, flow_id)}\n#{@tc_message_builder.report_stdout(test.name, @tc_message_builder.format_text(test.results[:rerun].log),flow_id)}\n#{@tc_message_builder.test_failed({:name => test.name, :flow_id => flow_id})}\n#{@tc_message_builder.finish_test(test.name, flow_id)}"
-          # @tc_message_builder.report_stdout(test.name, @tc_message_builder.format_text(test.results[:rerun].log))
-          # @tc_message_builder.test_failed({:name => test.name})
-          # @tc_message_builder.finish_test test.name
         end
       end
 

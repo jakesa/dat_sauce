@@ -1,0 +1,828 @@
+//basic scenario
+[
+  {
+    "keyword": "Feature",
+    "name": "Login",
+    "line": 1,
+    "description": "\r\nAs a user\r\nI want to login\r\nSo that I can do freight matching",
+    "id": "login",
+    "uri": "./features/login_and_session/login.feature",
+    "elements": [
+      {
+        "keyword": "Scenario",
+        "name": "c. valid username, invalid password",
+        "line": 8,
+        "description": "",
+        "id": "login;c.-valid-username,-invalid-password",
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "I login with valid username and invalid password",
+            "line": 9,
+            "match": {
+              "location": "features/step_definitions/login/login_steps.rb:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12972190000
+            }
+          },
+          {
+            "keyword": "Then ",
+            "name": "I see an invalid login message",
+            "line": 10,
+            "match": {
+              "location": "features/step_definitions/login/login_steps.rb:80"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 17104000
+            }
+          }
+        ]
+      }
+    ]
+  },
+  { //failed scenario
+    "keyword": "Feature",
+    "name": "Post to the Extended Network",
+    "line": 2,
+    "description": "As a user\r\nI want to be able to post to the Extended Network\r\nSo my posts can be seen on the Extended Network",
+    "id": "post-to-the-extended-network",
+    "uri": "./features/posting/post_extended_network.feature",
+    "elements": [
+      {
+        "comments": [
+          {
+            "value": "#    |Inactive  | $manual",
+            "line": 90
+          }
+        ],
+        "keyword": "Scenario",
+        "name": "2. Post to DEN button remains unavailable when editing only mutable fields on a load post with status Posted (Loads Only)",
+        "line": 93,
+        "description": "",
+        "id": "post-to-the-extended-network;2.-post-to-den-button-remains-unavailable-when-editing-only-mutable-fields-on-a-load-post-with-status-posted-(loads-only)",
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "I have a posted load post on the extended network",
+            "line": 94,
+            "match": {
+              "location": "features/step_definitions/posting/post_extended_network_steps.rb:57"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 824420000
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I am logged in",
+            "line": 95,
+            "match": {
+              "location": "features/step_definitions/login/login_steps.rb:5"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3039943000
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I am viewing my load postings",
+            "line": 96,
+            "match": {
+              "arguments": [
+                {
+                  "offset": 16,
+                  "val": "load"
+                }
+              ],
+              "location": "features/step_definitions/posting/navigation_step.rb:5"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10692874000
+            }
+          },
+          {
+            "keyword": "When ",
+            "name": "I edit the posting",
+            "line": 97,
+            "match": {
+              "location": "features/step_definitions/posting/post_extended_network_steps.rb:63"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7989293000
+            }
+          },
+          {
+            "keyword": "Then ",
+            "name": "when I change the value of each of the following fields, I see that the extended network button is not visible:",
+            "line": 98,
+            "rows": [
+              {
+                "cells": [
+                  "pickup_date"
+                ],
+                "line": 99
+              },
+              {
+                "cells": [
+                  "pickup_time"
+                ],
+                "line": 100
+              },
+              {
+                "cells": [
+                  "dropoff_time"
+                ],
+                "line": 101
+              },
+              {
+                "cells": [
+                  "load_type"
+                ],
+                "line": 102
+              },
+              {
+                "cells": [
+                  "length"
+                ],
+                "line": 103
+              },
+              {
+                "cells": [
+                  "weight"
+                ],
+                "line": 104
+              },
+              {
+                "cells": [
+                  "rate"
+                ],
+                "line": 105
+              },
+              {
+                "cells": [
+                  "contact"
+                ],
+                "line": 106
+              },
+              {
+                "cells": [
+                  "commodity"
+                ],
+                "line": 107
+              },
+              {
+                "cells": [
+                  "comment1"
+                ],
+                "line": 108
+              },
+              {
+                "cells": [
+                  "comment2"
+                ],
+                "line": 109
+              }
+            ],
+            "match": {
+              "location": "features/step_definitions/posting/post_extended_network_steps.rb:92"
+            },
+            "result": {
+              "status": "failed",
+              "error_message": "The following fields caused the extended network button to show up and shouldnt have: pickup_date pickup_time dropoff_time load_type length weight rate contact commodity comment1 comment2  (RuntimeError)\n./features/step_definitions/posting/post_extended_network_steps.rb:104:in `/^when I change the value of each of the following fields, I see that the extended network button is not visible:$/'\n./features/posting/post_extended_network.feature:98:in `Then when I change the value of each of the following fields, I see that the extended network button is not visible:'",
+              "duration": 10613138000
+            }
+          }
+        ]
+      }
+    ]
+  },
+  { //scenario with example table
+    "keyword": "Feature",
+    "name": "Post Management, Manual Deletion",
+    "line": 1,
+    "description": "\r\nAs a user who has made a posting that I'm done with\r\nI want to be able to delete the posting from the posting list\r\nSo that it is no longer cluttering up my list of postings",
+    "id": "post-management,-manual-deletion",
+    "uri": "/Users/jakesarate/apollo/source/integration_tests/features/posting/delete/post_delete.feature",
+    "elements": [
+      {
+        "keyword": "Scenario Outline",
+        "name": "a. Delete a Posting",
+        "line": 8,
+        "description": "",
+        "tags": [
+          {
+            "name": "@smoke",
+            "line": 7
+          },
+          {
+            "name": "@smoke_prod",
+            "line": 7
+          }
+        ],
+        "id": "post-management,-manual-deletion;a.-delete-a-posting",
+        "type": "scenario_outline",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "I have a <asset_type> posting with status <status>",
+            "line": 9,
+            "match": {
+              "arguments": [
+                {
+                  "offset": 9,
+                  "val": "load"
+                },
+                {
+                  "offset": 34,
+                  "val": "Posted"
+                }
+              ],
+              "location": "features/step_definitions/posting/provisioning_steps.rb:53"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I am logged in",
+            "line": 10,
+            "match": {
+              "location": "features/step_definitions/login/login_steps.rb:5"
+            }
+          },
+          {
+            "keyword": "When ",
+            "name": "I am viewing my <asset_type> postings",
+            "line": 11,
+            "match": {
+              "arguments": [
+                {
+                  "offset": 16,
+                  "val": "load"
+                }
+              ],
+              "location": "features/step_definitions/posting/navigation_step.rb:5"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I expand the posting details",
+            "line": 12,
+            "match": {
+              "location": "features/step_definitions/posting/common.rb:47"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I delete the posting using its delete button",
+            "line": 13,
+            "match": {
+              "location": "features/step_definitions/posting/common.rb:52"
+            }
+          },
+          {
+            "keyword": "Then ",
+            "name": "I see the posting I deleted is removed from the posting list",
+            "line": 14,
+            "match": {
+              "location": "features/step_definitions/posting/management_steps.rb:316"
+            }
+          }
+        ],
+        "examples": [
+          {
+            "keyword": "Examples",
+            "name": "Asset Types and Statuses",
+            "line": 16,
+            "description": "",
+            "id": "post-management,-manual-deletion;a.-delete-a-posting;asset-types-and-statuses",
+            "rows": [
+              {
+                "cells": [
+                  "asset_type",
+                  "status"
+                ],
+                "line": 17,
+                "id": "post-management,-manual-deletion;a.-delete-a-posting;asset-types-and-statuses;1"
+              },
+              {
+                "cells": [
+                  "load",
+                  "Posted"
+                ],
+                "line": 18,
+                "id": "post-management,-manual-deletion;a.-delete-a-posting;asset-types-and-statuses;2"
+              },
+              {
+                "cells": [
+                  "load",
+                  "Expired"
+                ],
+                "line": 19,
+                "id": "post-management,-manual-deletion;a.-delete-a-posting;asset-types-and-statuses;3"
+              },
+              {
+                "cells": [
+                  "load",
+                  "Unposted"
+                ],
+                "line": 20,
+                "id": "post-management,-manual-deletion;a.-delete-a-posting;asset-types-and-statuses;4"
+              },
+              {
+                "cells": [
+                  "truck",
+                  "Posted"
+                ],
+                "line": 21,
+                "id": "post-management,-manual-deletion;a.-delete-a-posting;asset-types-and-statuses;5"
+              },
+              {
+                "cells": [
+                  "truck",
+                  "Expired"
+                ],
+                "line": 22,
+                "id": "post-management,-manual-deletion;a.-delete-a-posting;asset-types-and-statuses;6"
+              },
+              {
+                "cells": [
+                  "truck",
+                  "Unposted"
+                ],
+                "line": 23,
+                "id": "post-management,-manual-deletion;a.-delete-a-posting;asset-types-and-statuses;7"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  { //supposedly an example outline with a failure
+    "keyword": "Feature",
+    "name": "Certain actions automatically cancel rollover",
+    "line": 1,
+    "description": "\r\nAs a user who needs to change my posting\r\nI want changing the posting to disable Rollover when it doesn't make sense to keep it on\r\nSo that I don't have to disable Rollover separately",
+    "id": "certain-actions-automatically-cancel-rollover",
+    "uri": "./features/posting/rollover/post_rollover_cancelAutomatically.feature",
+    "elements": [
+      {
+        "keyword": "Background",
+        "name": "",
+        "line": 8,
+        "description": "",
+        "type": "background",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "I have no previous postings",
+            "line": 9,
+            "match": {
+              "location": "features/step_definitions/posting/common.rb:76"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 980656000
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario Outline",
+        "name": "b. Editing any restricted field disables Rollover",
+        "line": 29,
+        "description": "",
+        "tags": [
+          {
+            "name": "@smoke",
+            "line": 28
+          }
+        ],
+        "id": "certain-actions-automatically-cancel-rollover;b.-editing-any-restricted-field-disables-rollover",
+        "type": "scenario_outline",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "I have a <asset_type> posting that is flagged for Rollover",
+            "line": 30,
+            "match": {
+              "arguments": [
+                {
+                  "offset": 9,
+                  "val": "load"
+                }
+              ],
+              "location": "features/step_definitions/posting/provisioning_steps.rb:420"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I am logged in",
+            "line": 31,
+            "match": {
+              "location": "features/step_definitions/login/login_steps.rb:5"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I am viewing my <asset_type> postings",
+            "line": 32,
+            "match": {
+              "arguments": [
+                {
+                  "offset": 16,
+                  "val": "load"
+                }
+              ],
+              "location": "features/step_definitions/posting/navigation_step.rb:5"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I am editing the posting",
+            "line": 33,
+            "match": {
+              "location": "features/step_definitions/posting/management_steps.rb:122"
+            }
+          },
+          {
+            "keyword": "When ",
+            "name": "I change any restricted field",
+            "line": 34,
+            "match": {
+              "location": "features/step_definitions/posting/assertions.rb:166"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I post the edited posting",
+            "line": 35,
+            "match": {
+              "location": "features/step_definitions/posting/entry_steps.rb:124"
+            }
+          },
+          {
+            "keyword": "Then ",
+            "name": "I see the edited posting is removed from my posting list",
+            "line": 36,
+            "match": {
+              "location": "features/step_definitions/posting/management_steps.rb:336"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I see a new posting is added to my posting list",
+            "line": 37,
+            "match": {
+              "location": "features/step_definitions/posting/management_steps.rb:348"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I see the new posting has the values I posted",
+            "line": 38,
+            "match": {
+              "location": "features/step_definitions/posting/management_steps.rb:103"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I see the new posting is not flagged for Rollover",
+            "line": 39,
+            "match": {
+              "location": "features/step_definitions/posting/management_steps.rb:722"
+            }
+          }
+        ],
+        "examples": [
+          {
+            "keyword": "Examples",
+            "name": "Asset Types",
+            "line": 41,
+            "description": "",
+            "id": "certain-actions-automatically-cancel-rollover;b.-editing-any-restricted-field-disables-rollover;asset-types",
+            "rows": [
+              {
+                "cells": [
+                  "asset_type"
+                ],
+                "line": 42,
+                "id": "certain-actions-automatically-cancel-rollover;b.-editing-any-restricted-field-disables-rollover;asset-types;1"
+              },
+              {
+                "cells": [
+                  "load"
+                ],
+                "line": 43,
+                "id": "certain-actions-automatically-cancel-rollover;b.-editing-any-restricted-field-disables-rollover;asset-types;2"
+              },
+              {
+                "cells": [
+                  "truck"
+                ],
+                "line": 44,
+                "id": "certain-actions-automatically-cancel-rollover;b.-editing-any-restricted-field-disables-rollover;asset-types;3"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  { //extended outline result with failures
+    "keyword": "Feature",
+    "name": "Certain actions automatically cancel rollover",
+    "line": 1,
+    "description": "\r\nAs a user who needs to change my posting\r\nI want changing the posting to disable Rollover when it doesn't make sense to keep it on\r\nSo that I don't have to disable Rollover separately",
+    "id": "certain-actions-automatically-cancel-rollover",
+    "uri": "./features/posting/rollover/post_rollover_cancelAutomatically.feature",
+    "elements": [
+      {
+        "keyword": "Background",
+        "name": "",
+        "line": 8,
+        "description": "",
+        "type": "background",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "I have no previous postings",
+            "line": 9,
+            "match": {
+              "location": "features/step_definitions/posting/common.rb:76"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 983930000
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario Outline",
+        "name": "b. Editing any restricted field disables Rollover",
+        "line": 29,
+        "description": "",
+        "tags": [
+          {
+            "name": "@smoke",
+            "line": 28
+          }
+        ],
+        "id": "certain-actions-automatically-cancel-rollover;b.-editing-any-restricted-field-disables-rollover",
+        "type": "scenario_outline",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "I have no previous postings",
+            "line": 9,
+            "match": {
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "Given ",
+            "name": "I have a load posting that is flagged for Rollover",
+            "line": 30,
+            "match": {
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I am logged in",
+            "line": 31,
+            "match": {
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I am viewing my load postings",
+            "line": 32,
+            "match": {
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I am editing the posting",
+            "line": 33,
+            "match": {
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "When ",
+            "name": "I change any restricted field",
+            "line": 34,
+            "match": {
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I post the edited posting",
+            "line": 35,
+            "match": {
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "Then ",
+            "name": "I see the edited posting is removed from my posting list",
+            "line": 36,
+            "match": {
+            },
+            "result": {
+              "status": "failed",
+              "error_message": "The posting was not remove (RSpec::Expectations::ExpectationNotMetError)\n./features/step_definitions/posting/management_steps.rb:337:in `/^I see the edited posting is removed from my posting list$/'\n./features/posting/rollover/post_rollover_cancelAutomatically.feature:36:in `Then I see the edited posting is removed from my posting list'"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I see a new posting is added to my posting list",
+            "line": 37,
+            "match": {
+            },
+            "result": {
+              "status": "skipped"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I see the new posting has the values I posted",
+            "line": 38,
+            "match": {
+            },
+            "result": {
+              "status": "skipped"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I see the new posting is not flagged for Rollover",
+            "line": 39,
+            "match": {
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 23737000000
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario Outline",
+        "name": "b. Editing any restricted field disables Rollover",
+        "line": 29,
+        "description": "",
+        "tags": [
+          {
+            "name": "@smoke",
+            "line": 28
+          }
+        ],
+        "id": "certain-actions-automatically-cancel-rollover;b.-editing-any-restricted-field-disables-rollover",
+        "type": "scenario_outline",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "I have no previous postings",
+            "line": 9,
+            "match": {
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "Given ",
+            "name": "I have a truck posting that is flagged for Rollover",
+            "line": 30,
+            "match": {
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I am logged in",
+            "line": 31,
+            "match": {
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I am viewing my truck postings",
+            "line": 32,
+            "match": {
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I am editing the posting",
+            "line": 33,
+            "match": {
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "When ",
+            "name": "I change any restricted field",
+            "line": 34,
+            "match": {
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I post the edited posting",
+            "line": 35,
+            "match": {
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "Then ",
+            "name": "I see the edited posting is removed from my posting list",
+            "line": 36,
+            "match": {
+            },
+            "result": {
+              "status": "failed",
+              "error_message": "The posting was not remove (RSpec::Expectations::ExpectationNotMetError)\n./features/step_definitions/posting/management_steps.rb:337:in `/^I see the edited posting is removed from my posting list$/'\n./features/posting/rollover/post_rollover_cancelAutomatically.feature:36:in `Then I see the edited posting is removed from my posting list'"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I see a new posting is added to my posting list",
+            "line": 37,
+            "match": {
+            },
+            "result": {
+              "status": "skipped"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I see the new posting has the values I posted",
+            "line": 38,
+            "match": {
+            },
+            "result": {
+              "status": "skipped"
+            }
+          },
+          {
+            "keyword": "And ",
+            "name": "I see the new posting is not flagged for Rollover",
+            "line": 39,
+            "match": {
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 23662976000
+            }
+          }
+        ]
+      }
+    ]
+  }
+
+]

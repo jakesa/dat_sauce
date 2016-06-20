@@ -6,9 +6,10 @@ module DATSauce
   class EventEmitter
 
     attr_accessor :type
-
-    def initialize(type, db=false)
+    #TODO add nil as a type here so users can get the standard cucumber output while the tests are running
+    def initialize(type)
       #progress bar, TeamCity, MongoDB
+      #the event handler will be responsible for sending events to the database
       @type = type
       case type
         when 'progress_bar'
@@ -16,21 +17,13 @@ module DATSauce
         when 'team_city'
           @emitter = DATSauce::TCEventHandler.new
         else
-          @emitter = nil
-          raise "#{type} is not a valid type. Call #types to get a list of valid types"
+          @emitter = DATSauce::EventHandler.new
       end
-      @db = DATSauce::DataBase.new if db # class for sending database events to the node.js app
-      # TODO: may want to add some connection tests in the Database class for making sure it can reach the server
     end
 
     # event = {:type, :message}
     def emit_event(event={})
       @emitter.process_event(event)
-
-      if @db && db_event?(event)
-        #emit database event
-        @db.process_event(event)
-      end
     end
 
     def types
@@ -47,6 +40,7 @@ module DATSauce
       events.include? event
     end
 
+    # a list of all available events
     def events
       ["start_test_run",
        "stop_test_run",
@@ -60,6 +54,7 @@ module DATSauce
        "debug"]
     end
 
+    # a reference as to which events I believe should write things to the database
     def db_events
       ["start_test_run",
        "stop_test_run",

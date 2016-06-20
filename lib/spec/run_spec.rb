@@ -30,7 +30,8 @@ describe 'DATSauce' do
     # tests = DATSauce::Cucumber::TestParser.parse_tests('./features/common/location_autosuggest.feature', ['-p dev_parallel', 'DRIVER=selenium'])
     # test_run = DATSauce::TestRun.new('Apollo', ['-p dev_parallel', 'DRIVER=selenium'], tests, true, 'progress_bar', false, 'local')
     # test_run.run
-    DATSauce.run_tests('Apollo', './features/login_and_session', ["-p dev_parallel", "DRIVER=selenium"], true, 'team_city', false, 'local', 10)
+    run = DATSauce.run_tests('Apollo', './features/common/location_autosuggest.feature', ["-p dev_parallel", "DRIVER=selenium"], true, 'progress_bar', false, 'local', 10)
+    puts run.results[:rerun].failed_tests
   end
 
 end
