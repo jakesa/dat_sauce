@@ -1,3 +1,3 @@
 module DATSauce
-  VERSION = "0.0.4"
+  VERSION = "1.0.1"
 end

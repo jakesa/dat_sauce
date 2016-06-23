@@ -26,15 +26,15 @@ module DATSauce
 
     # TODO: write a args parser for this instead of hard coding all of the attr_accessor values.
     # I really want to store these in a json config file.
-    {
-        :project_name => String, #name of the project
-        :run_options => Array, #an array of cucumber options
-        :tests => Array, #an array of tests to be run
-        :rerun => String, #serial or parallel (s/p) tells the application whether or not you want to do a rerun of the failures and if you want them to be run in serial or parallel
-        :event_emitter => String, #tells the system how you want the progress and the results displayed to the user
-        :run_location => Hash, #{:location, :desired_caps}
-        :number_of_processes => Integer, #the number of concurrent processes you want running tests. Performance will decrease the higher you go. Typically, 2 times the number of physical cores is the ceiling
-    }
+    # {
+    #     :project_name => String, #name of the project
+    #     :run_options => Array, #an array of cucumber options
+    #     :tests => Array, #an array of tests to be run
+    #     :rerun => String, #serial or parallel (s/p) tells the application whether or not you want to do a rerun of the failures and if you want them to be run in serial or parallel
+    #     :event_emitter => String, #tells the system how you want the progress and the results displayed to the user
+    #     :run_location => Hash, #{:location, :desired_caps}
+    #     :number_of_processes => Integer, #the number of concurrent processes you want running tests. Performance will decrease the higher you go. Typically, 2 times the number of physical cores is the ceiling
+    # }
     # def initialize(project_name, run_options, tests, rerun, event_emitter_type, record_to_database, runner_type, number_of_processes=nil, desired_caps=nil)
     def initialize(hash)
       @tests = hash[:tests]
@@ -46,7 +46,7 @@ module DATSauce
       @event_emitter = DATSauce::EventEmitter.new(hash[:event_emitter_type])
       @run_location = hash[:run_location]
       @status = 'Initialized'
-      @number_of_processes = number_of_processes
+      @number_of_processes = hash[:number_of_processes]
     end
 
     def run
@@ -127,7 +127,7 @@ module DATSauce
       end
       start_queue(test_objects, threads)
       process_run_results(test_objects, :primary, start_time, @run_id)
-      if @rerun && !@rerun.empty?
+      if !@rerun.nil? && !@rerun.empty?
         @event_emitter.emit_event :info => 'This test run has been flagged for rerun. Starting rerun...'
         if there_are_failures?(test_objects)
           _start_time = Time.now
@@ -269,22 +269,29 @@ module DATSauce
       rerun_run_time = 0
       @event_emitter.emit_event :update_stats => '' #this needs to be an object not a string. will implement later
       test_objects.each do |test|
-        if run_type == :primary
-          primary_results_log << test.results[:primary].log
-          primary_run_time += test.results[:primary].run_time
-          primary_failures << test.results[:primary].failed_tests
-          results = DATSauce::Result.new({:results => primary_results_log, :failed_tests => primary_failures }, start_time, run_id, 'primary')
-          results.aggregate_run_time = primary_run_time
-          @results[:primary] = results
-        elsif run_type == :rerun
-          unless test.results[:rerun].nil?
-            rerun_results_log << test.results[:rerun].log
-            rerun_run_time += test.results[:rerun].run_time
-            rerun_failures << test.results[:rerun].failed_tests
-            results = DATSauce::Result.new({:results => rerun_results_log, :failed_tests => rerun_failures }, start_time, run_id, 'rerun')
-            results.aggregate_run_time = rerun_run_time
-            @results[:rerun] = results
+        begin
+
+          if run_type == :primary
+            primary_results_log << test.results[:primary].log
+            primary_run_time += test.results[:primary].run_time
+            primary_failures << test.results[:primary].failed_tests
+            results = DATSauce::Result.new({:results => primary_results_log, :failed_tests => primary_failures }, start_time, run_id, 'primary')
+            results.aggregate_run_time = primary_run_time
+            @results[:primary] = results
+          elsif run_type == :rerun
+            unless test.results[:rerun].nil?
+              rerun_results_log << test.results[:rerun].log
+              rerun_run_time += test.results[:rerun].run_time
+              rerun_failures << test.results[:rerun].failed_tests
+              results = DATSauce::Result.new({:results => rerun_results_log, :failed_tests => rerun_failures }, start_time, run_id, 'rerun')
+              results.aggregate_run_time = rerun_run_time
+              @results[:rerun] = results
+            end
           end
+        rescue => e
+          puts e
+          puts "here is the contents of the result"
+          puts test.results
         end
       end
 

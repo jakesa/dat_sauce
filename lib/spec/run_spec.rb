@@ -3,35 +3,43 @@ require_relative '../../lib/dat_sauce'
 describe 'DATSauce' do
 
   it 'should work' do
-    tests = DATSauce::Cucumber::TestParser.parse_tests('./features', ['-p dev_parallel', 'DRIVER=sauce'])
-    test_run = DATSauce::TestRun.new('Apollo', ['-p dev_parallel', 'DRIVER=sauce'], tests, true, 'progress_bar', false, 'local')
+    # params = {
+    #     :project_name => String, #name of the project
+    #     :run_options => Array, #an array of cucumber options
+    #     :tests => Array, #an array of tests to be run
+    #     :rerun => String, #serial or parallel (s/p) tells the application whether or not you want to do a rerun of the failures and if you want them to be run in serial or parallel
+    #     :event_emitter_type => String, #tells the system how you want the progress and the results displayed to the user
+    #     :run_location => {:location => 'local'}, #{:location, :desired_caps}
+    #     :number_of_processes => 8, #the number of concurrent processes you want running tests. Performance will decrease the higher you go. Typically, 2 times the number of physical cores is the ceiling
+    # }
+    params = {
+            :project_name => 'RateView',
+            :run_options => ["-p test2", "-p firefox", "-p regress"],
+            :test_directory=> './features',
+            :rerun => 'serial',
+            :event_emitter_type => 'progress_bar',
+            :run_location => {:location => 'local'},
+            :number_of_processes => 10
+        }
+    params[:tests] = DATSauce::Cucumber::TestParser.parse_tests(params[:test_directory], params[:run_options])
+    test_run = DATSauce::TestRun.new(params)
     test_run.run
   end
 
   it 'should run a single file test' do
-    tests = DATSauce::Cucumber::TestParser.parse_tests('./features/login_and_session', ['-p dev_parallel', 'DRIVER=selenium'])
-    test_run = DATSauce::TestRun.new('Apollo', ['-p dev_parallel', 'DRIVER=selenium', '-f Teamcity::Cucumber::Formatter'], tests, true, 'progress_bar', false, 'local')
-    test_run.run
+
   end
 
   it 'should report to Teamcity' do
-    tests = DATSauce::Cucumber::TestParser.parse_tests('./features/login_and_session', ['-p dev', 'DRIVER=selenium'])
-    test_run = DATSauce::TestRun.new('Apollo', ['-p dev_parallel', 'DRIVER=selenium'], tests, true, 'team_city', false, 'local', 4)
-    test_run.run
+
   end
 
   it 'should use the new event emitter' do
-    tests = DATSauce::Cucumber::TestParser.parse_tests('./features/common/location_autosuggest.feature', ['-p dev_parallel', 'DRIVER=selenium'])
-    test_run = DATSauce::TestRun.new('Apollo', ['-p dev_parallel', 'DRIVER=selenium'], tests, true, 'team_city', false, 'local')
-    test_run.run
+
   end
 
   it 'should run from dat_sauce gem' do
-    # tests = DATSauce::Cucumber::TestParser.parse_tests('./features/common/location_autosuggest.feature', ['-p dev_parallel', 'DRIVER=selenium'])
-    # test_run = DATSauce::TestRun.new('Apollo', ['-p dev_parallel', 'DRIVER=selenium'], tests, true, 'progress_bar', false, 'local')
-    # test_run.run
-    run = DATSauce.run_tests('Apollo', './features/common/location_autosuggest.feature', ["-p dev_parallel", "DRIVER=selenium"], true, 'progress_bar', false, 'local', 10)
-    puts run.results[:rerun].failed_tests
+
   end
 
 end

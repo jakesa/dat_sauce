@@ -7,9 +7,11 @@ module DATSauce
           # raise "#{test_directory} does not exist" unless File.exist?(test_directory)
           # raise "#{test_directory} does not exist" unless Dir.exist? test_directory
           tests = dry_run([test_directory, options].compact.join(" ")).split("\n")
-          # puts tests
           refined_tests =[]
-          tests.delete_at(0) if tests[0].downcase.include?('using')
+          while tests[0].downcase.include?('using') || tests[0].downcase.include?('Using')
+            tests.delete_at(0)
+          end
+
           tests.each do |test|
             refined_tests << test.gsub('\\','/')
           end
