@@ -1,6 +1,6 @@
-require_relative 'base_test'
-require_relative 'progress'
+require_relative 'custom_accessor'
 require_relative 'event_emitter'
+require_relative 'event_handlers/event_handler_register'
 
 # TestRunObject?
 # {
@@ -20,22 +20,25 @@ require_relative 'event_emitter'
 module DATSauce
   class TestRun
     extend CustomAccessor
+    include EventHandlerRegister
+
     custom_attr_accessor :run_id, :project_name, :test_count, :test_run_status, :rerun, :run_options,
                          :tests, :remote, :queue_size, :results, :status
 
 
+    # --
     # TODO: write a args parser for this instead of hard coding all of the attr_accessor values.
     # I really want to store these in a json config file.
+    # ++
     # {
     #     :project_name => String, #name of the project
     #     :run_options => Array, #an array of cucumber options
     #     :tests => Array, #an array of tests to be run
     #     :rerun => String, #serial or parallel (s/p) tells the application whether or not you want to do a rerun of the failures and if you want them to be run in serial or parallel
-    #     :event_emitter => String, #tells the system how you want the progress and the results displayed to the user
+    #     :outputs => String, #tells the system how you want the progress and the results displayed to the user
     #     :run_location => Hash, #{:location, :desired_caps}
     #     :number_of_processes => Integer, #the number of concurrent processes you want running tests. Performance will decrease the higher you go. Typically, 2 times the number of physical cores is the ceiling
     # }
-    # def initialize(project_name, run_options, tests, rerun, event_emitter_type, record_to_database, runner_type, number_of_processes=nil, desired_caps=nil)
     def initialize(hash)
       @tests = hash[:tests]
       @test_count = @tests.length
@@ -43,11 +46,13 @@ module DATSauce
       @rerun = hash[:rerun]
       @results = {:primary => nil, :rerun => nil}
       @run_id = generate_run_id(hash[:project_name])
-      @event_emitter = DATSauce::EventEmitter.new(hash[:event_emitter_type])
+      @event_emitter = EventEmitter.new
+      @event_emitter.register_event_handlers(get_event_handlers(hash[:outputs]))
       @run_location = hash[:run_location]
       @status = 'Initialized'
       @number_of_processes = hash[:number_of_processes]
     end
+
 
     def run
       @status = 'Started'
@@ -96,8 +101,10 @@ module DATSauce
       test_objects
     end
 
+    #--
+    # TODO - do a better implementation of getting the queue size
+    # ++
     def get_queue_size
-      # puts "Getting queue size: "
       if @number_of_processes
         @queue_size = @number_of_processes
       elsif @run_location[:location] == 'sauce'
