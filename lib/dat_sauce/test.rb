@@ -3,7 +3,7 @@ require_relative 'custom_accessor'
 module DATSauce
   class Test
     #   run_id: "The id of the run that this test object was created for"  ---- I want to use this to later link to the test run for display in the web app
-    #   name: "Test name",
+    #   name: "Test name", - the name of the test
     #   test_options: ['test options'],
     #   run_time: some time in millisecond notation,
     #   status: "Done", "Running", "In Queue",
@@ -20,25 +20,12 @@ module DATSauce
       @results = {:primary => nil, :rerun => nil}
     end
 
+    # run the test
     def run
       @run_count += 1
       @status = "Running"
       time = Time.now
       process_results(DATSauce::Cucumber::Runner.run_test(@name, @test_options, nil), time)
-    end
-
-    def process_results(results, start_time)
-
-      if @run_count <= 1
-        results = DATSauce::Result.new(results, start_time, @run_id, 'primary')
-        @results[:primary] = results
-        @status = results.status
-      else
-        results = DATSauce::Result.new(results, start_time, @run_id, 'rerun')
-        @results[:rerun] = results
-        @status = results.status
-      end
-
     end
 
     #--
@@ -70,6 +57,23 @@ module DATSauce
         str << "#{attr}: #{send(attr)}\n" unless attr == :log && !log
       end
       $stdout << str
+    end
+
+    private
+
+    # process the results from the test run
+    def process_results(results, start_time)
+
+      if @run_count <= 1
+        results = DATSauce::Result.new(results, start_time, @run_id, 'primary')
+        @results[:primary] = results
+        @status = results.status
+      else
+        results = DATSauce::Result.new(results, start_time, @run_id, 'rerun')
+        @results[:rerun] = results
+        @status = results.status
+      end
+
     end
 
   end

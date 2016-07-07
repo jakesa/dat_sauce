@@ -2,7 +2,8 @@ require_relative 'custom_accessor'
 require_relative 'event_emitter'
 require_relative 'event_handlers/event_handler_register'
 
-# TestRunObject?
+#--
+# TestRunObject
 # {
 #     run_id: "unique run id for the test run (include a time stamp for uniqueness?)",
 #     category: "Primary run, Rerun"
@@ -16,6 +17,7 @@ require_relative 'event_handlers/event_handler_register'
 #     run_options: "an array of options that are used for this test" -- I currently have this property on the test object. May not need it in both places
 #
 # }
+#++
 
 module DATSauce
   class TestRun
@@ -23,13 +25,26 @@ module DATSauce
     include EventHandlerRegister
 
     custom_attr_accessor :run_id, :project_name, :test_count, :test_run_status, :rerun, :run_options,
-                         :tests, :remote, :queue_size, :results, :status
+                         :tests, :queue_size, :results, :status
 
 
+    # The TestRun object is responsible for storing and executing the meta data and events of a test run.
+    # Is has the following properties available for use by EventHandlers
+    # :run_id - a generated ID used for identifying the test run.
+    # :project_name - the name of the project you are running this for. This is just a string, but was designed to be used for historical information when run information is stored in a database
+    # :test_count - the number of tests to be executed for this run
+    # :rerun - this is the value that determines if there is going to be a rerun and if that rerun is going to be parallel or serial
+    # :run_options - these are the cucumber options that were passed to the test run and that will be used for each of the tests being executed as par of this run
+    # :tests - this is an array of all the tests that will be executed in this test run
+    # :queue_size - this is a slight misnomer. This is actually the max number of processes to be run at any given time.
+    # :results - this an array of all of the results collected from the tests that have been run
+    # :status - this is an indication as to where in the life cycle of a test run that the run is currently in
     # --
     # TODO: write a args parser for this instead of hard coding all of the attr_accessor values.
     # I really want to store these in a json config file.
     # ++
+    # Constructor for the TestRun object
+    # @param [Hash] hash a hash of options for the test run
     # {
     #     :project_name => String, #name of the project
     #     :run_options => Array, #an array of cucumber options
@@ -54,6 +69,11 @@ module DATSauce
     end
 
 
+    # Start the test run
+    #--
+    # TODO - this feels like it should be implemented a little better. The summarizing of results should be placed elsewhere Im thinking
+    # almost like the async style of node. Will look into it some other time
+    #++
     def run
       @status = 'Started'
       start_test_run(create_test_objects(@tests, @run_options, @run_id))
@@ -62,11 +82,15 @@ module DATSauce
       # TODO: need to emit a test_run_finished event
     end
 
+    # stop the test run
+    # @note this has not been implemented yet and is on the TODO list.
     def stop
       #TODO: implement this for a graceful shutdown of the test run.
       # TODO: need to emit a test_run_finished event
     end
 
+    # converts all of the properties of the TestRun object into a Hash
+    # @return [Hash]
     def to_hash
       obj = {}
       TestRun.attrs.each do |attr| #need to fix this. this looks at the Test class specifically and not whatever child class called it
@@ -75,10 +99,13 @@ module DATSauce
       obj
     end
 
+    # converts all of the properties of the TestRun object into a json string
     def to_json
       JSON.generate to_hash
     end
 
+    # outputs all of the properties of the TestRun object as a String
+    # @param [Boolean] log tells the method whether or not you want to output all of the results with the output
     def to_s(log = false)
       str = ''
       TestRun.attrs.each do |attr| #need to fix this. this looks at the Test class specifically and not whatever child class called it
@@ -90,6 +117,7 @@ module DATSauce
 
     private
 
+    # Creates all of the test objects used to store all of the information for each test that is ran
     def create_test_objects(tests, run_options, run_id = @run_id)
       @event_emitter.emit_event(:info => "Creating test objects")
       test_objects = []
@@ -104,6 +132,8 @@ module DATSauce
     #--
     # TODO - do a better implementation of getting the queue size
     # ++
+    # sets the size for the number of tests to be run at any one time
+    # @return [Int]
     def get_queue_size
       if @number_of_processes
         @queue_size = @number_of_processes
@@ -120,6 +150,7 @@ module DATSauce
       @queue_size
     end
 
+    # starts the test run
     def start_test_run(test_objects)
 
       @event_emitter.emit_event :start_test_run => self

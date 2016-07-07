@@ -62,5 +62,6 @@
     <orderEntry type="library" scope="PROVIDED" name="rspec-core (v2.99.2, RVM: ruby-2.2.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rspec-expectations (v2.99.2, RVM: ruby-2.2.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rspec-mocks (v2.99.4, RVM: ruby-2.2.4) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="yard (v0.8.7.6, RVM: ruby-2.2.4) [gem]" level="application" />
   </component>
 </module>

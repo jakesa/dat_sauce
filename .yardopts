@@ -1,0 +1,3 @@
+--no-private
+lib/dat_sauce/event_handlers/*.rb
+lib/dat_sauce/*.rb
