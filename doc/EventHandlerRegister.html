@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: EventHandlerRegister
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!EventHandlerRegister.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (E)</a> &raquo;
+    
+    
+    <span class="title">EventHandlerRegister</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Module: EventHandlerRegister
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+      <dt class="r1">Includes:</dt>
+      <dd class="r1"><span class='object_link'><a href="DATSauce/Constantize.html" title="DATSauce::Constantize (module)">DATSauce::Constantize</a></span></dd>
+      
+    
+  
+  
+    <dt class="r2">Included in:</dt>
+    <dd class="r2"><span class='object_link'><a href="DATSauce/TestRun.html" title="DATSauce::TestRun (class)">DATSauce::TestRun</a></span></dd>
+    
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/dat_sauce/event_handlers/event_handler_register.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_event_handlers-instance_method" title="#get_event_handlers (instance method)">- (Array&lt;Objects&gt;) <strong>get_event_handlers</strong>(handlers) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Get an array of handlers to register If a handler that is passed in is not
+valid, it will not be matched with a handler and ignored.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="DATSauce/Constantize.html" title="DATSauce::Constantize (module)">DATSauce::Constantize</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="DATSauce/Constantize.html#constantize-instance_method" title="DATSauce::Constantize#constantize (method)">#constantize</a></span>, <span class='object_link'><a href="DATSauce/Constantize.html#underscore-instance_method" title="DATSauce::Constantize#underscore (method)">#underscore</a></span></p>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="get_event_handlers-instance_method">
+  
+    - (<tt>Array&lt;Objects&gt;</tt>) <strong>get_event_handlers</strong>(handlers) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Get an array of handlers to register If a handler that is passed in is not
+valid, it will not be matched with a handler and ignored</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>handlers</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;String&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>list of handlers you want to use for this test run</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;Objects&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The list of matched handlers</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/dat_sauce/event_handlers/event_handler_register.rb', line 11</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_get_event_handlers'>get_event_handlers</span><span class='lparen'>(</span><span class='id identifier rubyid_handlers'>handlers</span><span class='rparen'>)</span>
+  <span class='comment'># convert the input into an array
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_handlers'>handlers</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>WARNING: There were no handlers passed to the EventHandlerRegister#get_event_handlers. Please make sure your params are correct</span><span class='tstring_end'>&quot;</span></span>
+    <span class='id identifier rubyid_handlers'>handlers</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_handlers'>handlers</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_handlers'>handlers</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_handlers'>handlers</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Array</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_require_custom_handlers'>require_custom_handlers</span> <span class='kw'>if</span> <span class='id identifier rubyid_custom_handler?'>custom_handler?</span><span class='lparen'>(</span><span class='id identifier rubyid_handlers'>handlers</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid__handlers'>_handlers</span> <span class='op'>=</span> <span class='id identifier rubyid_load_handlers'>load_handlers</span> <span class='id identifier rubyid_handlers'>handlers</span>
+  <span class='id identifier rubyid_check_stdout'>check_stdout</span> <span class='id identifier rubyid__handlers'>_handlers</span>
+  <span class='id identifier rubyid__handlers'>_handlers</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Thu Jul  7 14:07:08 2016 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.2.4).
+</div>
+
+  </body>
+</html>

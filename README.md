@@ -1,6 +1,12 @@
 # dat_sauce
 A test runner for Cucumber that implements parallelization
 
+
+###Links
+[Documentation](./doc/_index.html)
+[Handlers](./Handlers.md)
+
+
 ##Install
 Currently, you will need to clone the repository and build the gem from source as this has not been published to ruby gems.
 ```ruby
