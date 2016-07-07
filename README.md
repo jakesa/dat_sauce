@@ -3,8 +3,9 @@ A test runner for Cucumber that implements parallelization
 
 
 ###Links
-[Documentation](./doc/_index.html)
-[Handlers](./Handlers.md)
+- [Documentation](./doc/_index.html)
+
+- [Handlers](./Handlers.md)
 
 
 ##Install
