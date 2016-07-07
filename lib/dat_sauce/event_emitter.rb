@@ -39,10 +39,7 @@ module DATSauce
 
     # output a list of registered event handlers
     def list_event_handlers
-      # t = ['progress_bar', 'team_city']
-      # puts t
-      # t
-      @event_handlers.to_s
+      puts @event_handlers
     end
 
     # check to see if the specified event is one that can be written to a database

@@ -22,7 +22,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 2"
   spec.add_dependency 'cucumber', ">= 1.3.17"
-  spec.add_dependency 'ruby-progressbar', '1.7.5'
   spec.add_dependency 'curses'
 
 end

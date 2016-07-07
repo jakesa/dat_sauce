@@ -1,5 +1,5 @@
-
 require 'curses'
+
 module DATSauce
 
   class ProgressBar
