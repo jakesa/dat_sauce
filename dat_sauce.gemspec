@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = DATSauce::VERSION
   spec.authors       = ["jakesa"]
   spec.email         = ["jakes55214@yahoo.com"]
-  spec.summary       = 'Ruby wrapper for parallel and distributed Cucumber tests on SauceLabs'
+  spec.summary       = 'Test runner for Cucumber that implements parallelization'
   spec.description   = ''
   spec.homepage      = ""
   spec.license       = "MIT"
