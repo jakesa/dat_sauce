@@ -1,6 +1,6 @@
-# Snagged from Cucumber
 
 module DATSauce
+  # Snagged from Cucumber
   module Constantize
 
     def constantize(camel_cased_word)

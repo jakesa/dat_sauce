@@ -3,7 +3,7 @@ A test runner for Cucumber that implements parallelization
 
 
 ###Links
-- [Documentation](./doc/_index.html)
+- [Documentation](http://www.rubydoc.info/github/jakesa/dat_sauce/master/index)
 
 - [Handlers](./Handlers.md)
 
