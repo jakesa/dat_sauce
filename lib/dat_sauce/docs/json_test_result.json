@@ -1,0 +1,109 @@
+[
+  {
+    "uri": "./features/authentication/login.feature",
+    "id": "siebel-portal-access-authentication",
+    "keyword": "Feature",
+    "name": "Siebel Portal Access Authentication",
+    "description": "  In order to ensure the security of critical business data\n  As a user of the Siebel Open UI CRM Portal\n  I want users to access the portal only with valid login credentials",
+    "line": 4,
+    "tags": [
+      {
+        "name": "@desktop",
+        "line": 1
+      },
+      {
+        "name": "@regression",
+        "line": 1
+      },
+      {
+        "name": "@authentication",
+        "line": 1
+      },
+      {
+        "name": "@working",
+        "line": 1
+      }
+    ],
+    "elements": [
+      {
+        "id": "siebel-portal-access-authentication;user-can-log-in-with-valid-credentials",
+        "keyword": "Scenario",
+        "name": "User can log in with valid credentials",
+        "description": "",
+        "line": 11,
+        "type": "scenario",
+        "tags": [
+          {
+            "name": "@desktop",
+            "line": 1
+          },
+          {
+            "name": "@regression",
+            "line": 1
+          },
+          {
+            "name": "@authentication",
+            "line": 1
+          },
+          {
+            "name": "@working",
+            "line": 1
+          },
+          {
+            "name": "@4843",
+            "line": 10
+          }
+        ],
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "I start on the Login page",
+            "line": 12,
+            "match": {
+              "location": "features/step_definitions/login_steps.rb:62"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 614994546
+            }
+          },
+          {
+            "keyword": "When ",
+            "name": "I attempt to login with a valid user account",
+            "line": 13,
+            "match": {
+              "location": "features/step_definitions/login_steps.rb:2"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2777233075
+            }
+          },
+          {
+            "keyword": "Then ",
+            "name": "I expect to be logged in",
+            "line": 14,
+            "match": {
+              "location": "features/step_definitions/login_steps.rb:10"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 13022288
+            }
+          }
+        ],
+        "after": [
+          {
+            "match": {
+              "location": "features/support/hooks.rb:8"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 347051137
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -3,6 +3,7 @@ module DATSauce
     module TestParser
       class << self
 
+        # TODO: convert this to JSON??
         def parse_tests(test_directory, options)
           # raise "#{test_directory} does not exist" unless File.exist?(test_directory)
           # raise "#{test_directory} does not exist" unless Dir.exist? test_directory
@@ -22,7 +23,7 @@ module DATSauce
         private
 
         def dry_run(cmd)
-          puts "Preprocessing test files"
+          puts 'Preprocessing test files'
 
           outputs = cmd.scan(/-f \S+/)
           outputs.each do |output|

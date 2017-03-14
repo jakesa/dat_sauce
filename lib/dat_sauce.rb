@@ -17,7 +17,6 @@ module DATSauce
      # @test_run.stop
     # end
     hash[:tests] = DATSauce::Cucumber::TestParser.parse_tests(hash[:test_directory], hash[:run_options])
-    puts hash[:tests].length
     @test_run = DATSauce::TestRun.new(hash)
     @test_run.run
     @test_run

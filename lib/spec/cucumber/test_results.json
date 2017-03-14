@@ -1,0 +1,67 @@
+[
+  {
+    "uri": "/Users/jakesa/dat_sauce/lib/spec/cucumber/features/passing_scenarios.feature",
+    "id": "passing-scenarios",
+    "keyword": "Feature",
+    "name": "Passing Scenarios",
+    "description": "  As a tester\n  I want to be able to test my code",
+    "line": 1,
+    "elements": [
+      {
+        "keyword": "Background",
+        "name": "",
+        "description": "",
+        "line": 5,
+        "type": "background",
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "I have tests setup",
+            "line": 6,
+            "match": {
+              "location": "features/step_definitions/all_the_steps.rb:2"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3003184296
+            }
+          }
+        ]
+      },
+      {
+        "id": "passing-scenarios;run-a-passing-test",
+        "keyword": "Scenario",
+        "name": "Run a passing test",
+        "description": "",
+        "line": 8,
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "When ",
+            "name": "I run the test",
+            "line": 9,
+            "match": {
+              "location": "features/step_definitions/all_the_steps.rb:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2003194936
+            }
+          },
+          {
+            "keyword": "Then ",
+            "name": "I see the test pass",
+            "line": 10,
+            "match": {
+              "location": "features/step_definitions/all_the_steps.rb:10"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1003335389
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

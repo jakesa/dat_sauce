@@ -1,4 +1,6 @@
 require_relative 'custom_accessor'
+require_relative 'test_result'
+require_relative 'test_runner'
 
 module DATSauce
   class Test
@@ -9,21 +11,21 @@ module DATSauce
     #   status: "Done", "Running", "In Queue",
     #   results: "JSON string of results"
     extend CustomAccessor
-    custom_attr_accessor :run_id, :name, :test_options, :status, :results, :run_count
+    custom_attr_accessor :run_id, :name, :test_options, :status, :results, :run_count, :test_id
 
     def initialize(run_id, name, test_options)
       @run_id = run_id
       @run_count = 0
       @name = name
       @test_options = test_options
-      @status = "In Queue"
+      @status = 'In Queue'
       @results = {:primary => nil, :rerun => nil}
     end
 
     # run the test
     def run
       @run_count += 1
-      @status = "Running"
+      @status = 'Running'
       time = Time.now
       process_results(DATSauce::Cucumber::Runner.run_test(@name, @test_options, nil), time)
     end
@@ -65,11 +67,11 @@ module DATSauce
     def process_results(results, start_time)
 
       if @run_count <= 1
-        results = DATSauce::Result.new(results, start_time, @run_id, 'primary')
+        results = DATSauce::TestResult.new(results, start_time, @run_id, 'primary')
         @results[:primary] = results
         @status = results.status
       else
-        results = DATSauce::Result.new(results, start_time, @run_id, 'rerun')
+        results = DATSauce::TestResult.new(results, start_time, @run_id, 'rerun')
         @results[:rerun] = results
         @status = results.status
       end

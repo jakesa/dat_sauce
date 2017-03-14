@@ -1,0 +1,1 @@
+default: --require ./features --tags ~@manual --tags ~@upcoming --tags ~@failing --tags ~@wip -f progress -f json --out test_results.json

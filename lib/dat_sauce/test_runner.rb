@@ -23,14 +23,16 @@ module DATSauce
             puts e.backtrace
           end
 
-          temp_file = Tempfile.new('test_run')
+          # temp_file = Tempfile.new('test_run')
 
           outputs = _options.scan(/-f \S+/)
           #TODO: need to change the output from pretty to json.
           if outputs.empty?
-            io = Object::IO.popen("bundle exec cucumber #{test} #{_options} -f pretty -f rerun --out #{temp_file.path}")
+            io = Object::IO.popen("bundle exec cucumber #{test} #{_options} -f json")
+            # io = Object::IO.popen("bundle exec cucumber #{test} #{_options} -f json -f rerun --out #{temp_file.path}")
           else
-            io = Object::IO.popen("bundle exec cucumber #{test} #{_options} -f rerun --out #{temp_file.path}")
+            # io = Object::IO.popen("bundle exec cucumber #{test} #{_options} -f rerun --out #{temp_file.path}")
+            io = Object::IO.popen("bundle exec cucumber #{test} #{_options} ")
           end
 
           until io.eof? do
@@ -39,11 +41,12 @@ module DATSauce
             _results += result
           end
           Process.wait2(io.pid)
-          result_hash = {}
-          result_hash[:failed_tests] = process_temp_file(temp_file)
+          # result_hash = {}
+          # result_hash[:failed_tests] = process_temp_file(temp_file)
           #_results should be a JSON string
-          result_hash[:results] = _results
-          result_hash
+          # result_hash[:results] = JSON.parse(_results)
+          # result_hash
+          JSON.parse(_results)
         end
 
         private

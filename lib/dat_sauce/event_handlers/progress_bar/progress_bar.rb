@@ -29,14 +29,14 @@ class ProgressBarEventHandler < DATSauce::EventHandler
         @progress_bar.pass_count += 1
       else
         @progress_bar.fail_count += 1
-        @progress_bar.current_failures << test.results[:primary].failed_tests
+        @progress_bar.current_failures << test.results[:primary].failed_scenarios
       end
     else
       if test.results[:rerun].status == 'Passed'
         @progress_bar.pass_count += 1
       else
         @progress_bar.fail_count += 1
-        @progress_bar.current_failures << test.results[:rerun].failed_tests
+        @progress_bar.current_failures << test.results[:rerun].failed_scenarios
       end
     end
 

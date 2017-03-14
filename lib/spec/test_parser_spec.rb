@@ -1,10 +1,12 @@
 require_relative 'spec_helper'
 
-describe "TestParse" do
+describe 'TestParser' do
 
   it 'should parse a list directory of tests' do
-    tests = DATSauce::Cucumber::TestParser.parse_tests('./features/login_and_session', ['-p dev'])
-    # Dir.chdir "~/apollo/source/integration_tests"
+    previous_dir = Dir.pwd
+    Dir.chdir './lib/spec/cucumber'
+    tests = DATSauce::Cucumber::TestParser.parse_tests('./features', ['-p default'])
+    Dir.chdir previous_dir
     expect(tests).to_not(eql nil)
   end
 end

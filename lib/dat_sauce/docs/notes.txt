@@ -1,0 +1,5 @@
+each item in the json object is a feature
+key word: is the gyrkin word. example 'Given', 'When', 'Then', 'And'
+at the feature level, key word is always 'Feature'
+at the scenario level, keyword is 'Scenario' or 'Scenario Outline'
+name: is either the name of the feature file at the feature level or the
