@@ -1,7 +1,7 @@
 # dat_sauce
 A test runner for Cucumber that implements parallelization
 
-
+[![Build Status](https://travis-ci.org/jakesa/dat_sauce.svg?branch=master)](https://travis-ci.org/jakesa/dat_sauce)
 ###Links
 - [Documentation](http://www.rubydoc.info/github/jakesa/dat_sauce/master/index)
 
