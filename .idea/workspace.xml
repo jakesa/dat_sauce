@@ -2,47 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c94a1fc-7c6c-499f-b04b-a3b621f4620e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.rspec" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/dat_sauce/docs/dry_run_formatter.rb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/dat_sauce/docs/json_test_result.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/dat_sauce/docs/json_test_results.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/dat_sauce/docs/notes.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/dat_sauce/results_parser_2.rb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/dat_sauce/test_result.rb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/dat_sauce/test_run_result.rb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/spec/cucumber/cucumber.yml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/spec/cucumber/env.rb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/spec/cucumber/features/failing_scenario_outlines.feature" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/spec/cucumber/features/failing_scenarios.feature" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/spec/cucumber/features/passing_scenario_outlines.feature" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/spec/cucumber/features/passing_scenarios.feature" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/spec/cucumber/features/pending_scenarios.feature" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/spec/cucumber/features/step_definitions/all_the_steps.rb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/spec/cucumber/features/support/dry_run_formatter.rb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/spec/test_result_spec.rb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/spec/test_run_result_spec.rb" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/spec/alpha.rb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/spec/progress_spec.rb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/spec/readme.txt" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/dat_sauce/result.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/legacy_code/result.rb" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/dat_sauce/results_parser.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/legacy_code/results_parser.rb" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/spec/curses_proof.rb" afterPath="$PROJECT_DIR$/lib/spec/proving_ground/curses_proof.rb" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/spec/progress_bar_proof.rb" afterPath="$PROJECT_DIR$/lib/spec/proving_ground/progress_bar_proof.rb" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/spec/run_spec.rb" afterPath="$PROJECT_DIR$/lib/spec/test_run_spec.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dat_sauce.iml" afterPath="$PROJECT_DIR$/.idea/dat_sauce.iml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/dat_sauce-1.1.2.gem" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dat_sauce.gemspec" afterPath="$PROJECT_DIR$/dat_sauce.gemspec" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/event_handlers/progress_bar/progress_bar.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/event_handlers/progress_bar/progress_bar.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/test.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/test.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/test_parser.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/test_parser.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/test_run.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/test_run.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/test_runner.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/test_runner.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/version.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/version.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/spec/results_parser_spec.rb" afterPath="$PROJECT_DIR$/lib/spec/results_parser_spec.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/spec/spec_helper.rb" afterPath="$PROJECT_DIR$/lib/spec/spec_helper.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/spec/test_parser_spec.rb" afterPath="$PROJECT_DIR$/lib/spec/test_parser_spec.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/spec/test_runner_spec.rb" afterPath="$PROJECT_DIR$/lib/spec/test_runner_spec.rb" />
     </list>
     <ignored path="dat_sauce.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -99,7 +60,7 @@
       <file leaf-file-name="test_run.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_run.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="570">
+            <state relative-caret-position="405">
               <caret line="150" column="35" lean-forward="true" selection-start-line="150" selection-start-column="35" selection-end-line="150" selection-end-column="35" />
               <folding />
             </state>
@@ -546,18 +507,18 @@
       <workItem from="1485824096785" duration="23000" />
       <workItem from="1486228195873" duration="602000" />
       <workItem from="1486507950317" duration="1582000" />
-      <workItem from="1488491813445" duration="100136000" />
+      <workItem from="1488491813445" duration="100554000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="110103000" />
+    <option name="totallyTimeSpent" value="110521000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="873" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28898427" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28898427" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891566" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1009,7 +970,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_run.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
+        <state relative-caret-position="405">
           <caret line="150" column="35" lean-forward="true" selection-start-line="150" selection-start-column="35" selection-end-line="150" selection-end-column="35" />
           <folding />
         </state>
