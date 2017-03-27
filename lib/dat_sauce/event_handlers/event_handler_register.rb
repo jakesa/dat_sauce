@@ -1,6 +1,7 @@
 require_relative 'event_handler'
 require_relative 'progress_bar/progress_bar'
 require_relative 'team_city/team_city'
+require_relative 'mongo_database/database_handler'
 require_relative '../constantize'
 module EventHandlerRegister
   include DATSauce::Constantize
@@ -11,7 +12,7 @@ module EventHandlerRegister
   def get_event_handlers(handlers)
     # convert the input into an array
     if handlers.nil?
-      puts "WARNING: There were no handlers passed to the EventHandlerRegister#get_event_handlers. Please make sure your params are correct"
+      puts 'WARNING: There were no handlers passed to the EventHandlerRegister#get_event_handlers. Please make sure your params are correct'
       handlers = []
     else
       handlers = [handlers] unless handlers.is_a? Array

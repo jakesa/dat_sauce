@@ -12,7 +12,8 @@ module DATSauce
         {
             :progress_bar => ProgressBarEventHandler,
             :team_city => TCEventHandler,
-            :default => DATSauce::EventHandler
+            :default => DATSauce::EventHandler,
+            :database => DBEventHandler
         }
       end
 
@@ -38,9 +39,70 @@ module DATSauce
           end
         end
       end
-    #--
-    # TODO - It might be worth while to implement a full basic default event handler and have all other event handlers inherit from this
-    # and override the methods
+
+      # event fired when a test run is started
+      # @param test_run DATSauce::TestRun
+      def start_test_run(test_run)
+        #stub meant to be overridden
+        raise NoMethodError
+      end
+
+      # event fired when a test run is stopped
+      # @param test_run DATSauce::TestRun
+      def stop_test_run(test_run)
+        #stub meant to be overridden
+        raise NoMethodError
+      end
+
+      # event fired when a rerun is started
+      # @param test_run DATSauce::TestRun
+      def start_rerun(test_run)
+        #stub meant to be overridden
+        raise NoMethodError
+      end
+
+      # event fired when a test run is completed
+      # @param test_run DATSauce::TestRun
+      def test_run_completed(test_run)
+        #stub meant to be overridden
+        raise NoMethodError
+      end
+
+      # event fired when a test object is created
+      # @param test DATSauce::Test
+      def test_created(test)
+        #stub meant to be overridden
+        raise NoMethodError
+      end
+
+      # event fired when a test is started
+      # @param test DATSauce::Test
+      def start_test(test)
+        #stub meant to be overridden
+        raise NoMethodError
+      end
+
+      # event fired when a test is stopped
+      # @param test DATSauce::Test
+      def stop_test(test)
+        #stub meant to be overridden
+        raise NoMethodError
+      end
+
+      # event fired when a test is completed
+      # @param test DATSauce::Test
+      def test_completed(test)
+        #stub meant to be overridden
+        raise NoMethodError
+      end
+
+      # event fired when and info event is fired
+      # this is usually status information. Things like telling the user all threads are full and sending remaining tests to a queu
+      # @param message String
+      def info(message)
+        #stub meant to be overridden
+        raise NoMethodError
+      end
     end
 end
 

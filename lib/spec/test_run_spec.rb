@@ -14,10 +14,10 @@ describe 'DATSauce' do
     # }
     @params = {
         :project_name => 'Apollo',
-        :run_options => ["-p default", "DRIVER=selenium"],
+        :run_options => ["-p default"],
         :test_directory=> File.expand_path('./cucumber/features', File.dirname(__FILE__)),
         :rerun => 'parallel',
-        :outputs => 'default',
+        :outputs => ['default'],
         :run_location => {:location => 'local'},
         :number_of_processes => 10
     }
@@ -77,7 +77,7 @@ describe 'DATSauce' do
     @params[:test_directory] = file_1
     test_run = DATSauce.run_tests(@params)
     Dir.chdir previous_dir
-    expect(test_run.run_id).to_not eq nil
+    expect(test_run.runId).to_not eq nil
   end
 
   it 'should have a project_name' do
@@ -87,7 +87,7 @@ describe 'DATSauce' do
     @params[:test_directory] = file_1
     test_run = DATSauce.run_tests(@params)
     Dir.chdir previous_dir
-    expect(test_run.project_name).to eq 'Apollo'
+    expect(test_run.projectName).to eq 'Apollo'
   end
 
   it 'should have a test count' do
@@ -97,7 +97,7 @@ describe 'DATSauce' do
     @params[:test_directory] = file_1
     test_run = DATSauce.run_tests(@params)
     Dir.chdir previous_dir
-    expect(test_run.test_count).to eq 1
+    expect(test_run.testCount).to eq 1
   end
 
   it 'should have a status' do
@@ -117,7 +117,7 @@ describe 'DATSauce' do
     @params[:test_directory] = file_1
     test_run = DATSauce.run_tests(@params)
     Dir.chdir previous_dir
-    expect(test_run.run_options).to_not eq nil
+    expect(test_run.runOptions).to_not eq nil
   end
 
   it 'should have a queue_size' do

@@ -10,24 +10,30 @@ module DATSauce
     #   run_time: some time in millisecond notation,
     #   status: "Done", "Running", "In Queue",
     #   results: "JSON string of results"
+    #TODO: consider adding a last_run timestamp for use in the database
     extend CustomAccessor
-    custom_attr_accessor :run_id, :name, :test_options, :status, :results, :run_count, :test_id
+    custom_attr_accessor :runId, :uri, :runOptions, :status, :results, :runCount, :testId, :runDate, :name, :lastRun
 
-    def initialize(run_id, name, test_options)
-      @run_id = run_id
-      @run_count = 0
-      @name = name
-      @test_options = test_options
+    def initialize(run_id, test, run_options)
+      @runId = run_id
+      @runCount = 0
+      @uri = "#{test[:uri]}:#{test[:line]}"
+      @name = test[:name]
+      @testId = test[:id]
+      @runOptions = run_options
       @status = 'In Queue'
       @results = {:primary => nil, :rerun => nil}
+      @runDate = Time.now.to_i * 1000 #this is epoch
+      @lastRun = nil
     end
 
     # run the test
     def run
-      @run_count += 1
+      @runCount += 1
       @status = 'Running'
       time = Time.now
-      process_results(DATSauce::Cucumber::Runner.run_test(@name, @test_options, nil), time)
+      @lastRun = time.to_i * 1000 #epoch
+      process_results(DATSauce::Cucumber::Runner.run_test(@uri, @runOptions, @runId), time)
     end
 
     #--
@@ -39,7 +45,7 @@ module DATSauce
     # @return [Hash<Symbol, String>]
     def to_hash
       obj = {}
-      Test.attrs.each do |attr| #need to fix this. this looks at the Test class specifically and not whatever child class called it
+      Test.attrs.each do |attr|
         obj[attr] = send(attr)
       end
       obj
@@ -48,7 +54,12 @@ module DATSauce
     # convert the test object properties into a json string
     # @return [String]
     def to_json
-      JSON.generate to_hash
+      hash  = to_hash
+      results = {primary: nil, rerun: nil}
+      results[:primary] = hash[:results][:primary].to_json unless hash[:results][:primary].nil?
+      results[:rerun] = hash[:results][:rerun].to_json unless hash[:results][:rerun].nil?
+      hash[:results] = results
+      JSON.generate hash
     end
 
     # output the properties of the test object as a string to the console
@@ -65,13 +76,13 @@ module DATSauce
 
     # process the results from the test run
     def process_results(results, start_time)
-
-      if @run_count <= 1
-        results = DATSauce::TestResult.new(results, start_time, @run_id, 'primary')
+      #TODO: need to pull the test_id from the results or generate it the same way as the results do
+      if @runCount <= 1
+        results = DATSauce::TestResult.new(results, start_time, @runId, 'primary')
         @results[:primary] = results
         @status = results.status
       else
-        results = DATSauce::TestResult.new(results, start_time, @run_id, 'rerun')
+        results = DATSauce::TestResult.new(results, start_time, @runId, 'rerun')
         @results[:rerun] = results
         @status = results.status
       end

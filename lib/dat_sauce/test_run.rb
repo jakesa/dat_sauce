@@ -25,8 +25,8 @@ module DATSauce
     extend CustomAccessor
     include EventHandlerRegister
 
-    custom_attr_accessor :run_id, :project_name, :test_count, :rerun, :run_options,
-                         :tests, :queue_size, :results, :status
+    custom_attr_accessor :runId, :projectName, :testCount, :rerun, :runOptions,
+                         :tests, :queueSize, :results, :status, :startDate, :stopDate
 
 
     # The TestRun object is responsible for storing and executing the meta data and events of a test run.
@@ -57,17 +57,17 @@ module DATSauce
     # }
     def initialize(hash)
       @tests = hash[:tests]
-      @test_count = @tests.length
-      @run_options = hash[:run_options]
+      @testCount = @tests.length
+      @runOptions = hash[:run_options]
       @rerun = hash[:rerun]
       @results = {:primary => nil, :rerun => nil}
-      @run_id = generate_run_id(hash[:project_name])
+      @runId = generate_run_id(hash[:project_name])
       @event_emitter = EventEmitter.new
       @event_emitter.register_event_handlers(get_event_handlers(hash[:outputs]))
       @run_location = hash[:run_location]
       @status = 'Initialized'
       @number_of_processes = hash[:number_of_processes]
-      @project_name = hash[:project_name]
+      @projectName = hash[:project_name]
     end
 
 
@@ -77,16 +77,19 @@ module DATSauce
     # almost like the async style of node. Will look into it some other time
     #++
     def run
+      @startDate = Time.now.to_i * 1000
       @status = 'Started'
-      start_test_run(create_test_objects(@tests, @run_options, @run_id))
+      start_test_run(create_test_objects(@tests, @runOptions, @runId))
       puts summarize_results
       @status = 'Completed'
-      # TODO: need to emit a test_run_finished event
+      @stopDate = Time.now.to_i * 1000
+      @event_emitter.emit_event(test_run_completed: self)
     end
 
     # stop the test run
     # @note this has not been implemented yet and is on the TODO list.
     def stop
+      @stopDate = Time.now.to_i * 1000
       #TODO: implement this for a graceful shutdown of the test run.
       # TODO: need to emit a test_run_finished event
     end
@@ -103,7 +106,15 @@ module DATSauce
 
     # converts all of the properties of the TestRun object into a json string
     def to_json
-      JSON.generate to_hash
+      # TODO: The tests array should be converted to an array of test ids rather than the actual test objects for insertion into the database
+      # the tests will be written to the database independently and will be referenced instead of keeping 2 copies of the data in the database
+      # JSON.generate to_hash
+      hash  = to_hash
+      results = {primary: nil, rerun: nil}
+      results[:primary] = hash[:results][:primary].to_json unless hash[:results][:primary].nil?
+      results[:rerun] = hash[:results][:rerun].to_json unless hash[:results][:rerun].nil?
+      hash[:results] = results
+      JSON.generate hash
     end
 
     # outputs all of the properties of the TestRun object as a String
@@ -120,13 +131,13 @@ module DATSauce
     private
 
     # Creates all of the test objects used to store all of the information for each test that is ran
-    def create_test_objects(tests, run_options, run_id = @run_id)
-      @event_emitter.emit_event(:info => "Creating test objects")
+    def create_test_objects(tests, run_options, run_id = @runId)
+      @event_emitter.emit_event(:info => 'Creating test objects')
       test_objects = []
       tests.each do |test|
         test_object = DATSauce::Test.new(run_id, test, run_options)
         test_objects << test_object
-        @event_emitter.emit_event(:test_creation => test_object)
+        @event_emitter.emit_event(:test_created => test_object)
       end
       test_objects
     end
@@ -138,26 +149,26 @@ module DATSauce
     # @return [Int]
     def get_queue_size
       if @number_of_processes
-        @queue_size = @number_of_processes
+        @queueSize = @number_of_processes
       elsif @run_location[:location] == 'sauce'
         # get max concurrent tests from sauce and assign to @queue_size
-        @queue_size = 50 #this is hard coded for now. Will change later
+        @queueSize = 50 #this is hard coded for now. Will change later
       elsif @run_location[:location] == 'grid'
         # get max nodes from grid
       elsif @run_location[:location] == 'local'
-        @queue_size = DATSauce::PlatformUtils.processor_count * 2
+        @queueSize = DATSauce::PlatformUtils.processor_count * 2
         # get max threads from platform utils
       end
       # puts "Size: #{@queue_size}"
-      @queue_size
+      @queueSize
     end
 
     # starts the test run
     def start_test_run(test_objects)
 
+      @status = 'Running'
       @event_emitter.emit_event :start_test_run => self
       @event_emitter.emit_event :info => 'Starting test run'
-      @status = "Running"
       start_time = Time.now
       threads = []
       get_queue_size.times do
@@ -166,13 +177,13 @@ module DATSauce
         sleep 0.5 #this is an attempt at a stop gap for the account rental service not being able to handle multiple requests at once (accounts are being rented out when they should not be)
       end
       start_queue(test_objects, threads)
-      process_run_results(test_objects, :primary, start_time, @run_id)
+      process_run_results(test_objects, :primary, start_time, @runId)
       if !@rerun.nil? && !@rerun.empty?
         @event_emitter.emit_event :info => 'This test run has been flagged for rerun. Starting rerun...'
         if there_are_failures?(test_objects)
           _start_time = Time.now
           start_rerun(test_objects, @rerun)
-          process_run_results(test_objects, :rerun, _start_time, @run_id)
+          process_run_results(test_objects, :rerun, _start_time, @runId)
         else
           @event_emitter.emit_event :info => 'There were no failures detected. A rerun was not necessary.'
         end
@@ -184,7 +195,7 @@ module DATSauce
 
     def there_are_failures?(test_objects)
       test_objects.each do |test|
-        return true if test.status == 'Failed' && test.run_count <= 1
+        return true if test.status == 'Failed' && test.runCount <= 1
       end
       false
     end
@@ -200,10 +211,10 @@ module DATSauce
       if rerun_type == 'serial'
         queue = 1
       elsif rerun_type == 'parallel'
-        queue = @queue_size
+        queue = @queueSize
       else
         @event_emitter.emit_event :info => 'Did not recognize rerun type or none was passed. Running the rerun in parallel mode'
-        queue = @queue_size
+        queue = @queueSize
       end
       queue.times do
         test = get_next_rerun_test(test_objects)
@@ -225,7 +236,7 @@ module DATSauce
       @event_emitter.emit_event :info => 'All test processes full. Sending remaining tests to the test queue...'
       test = get_next_test(test_objects)
       while test != nil
-        if get_active_thread_count(threads) < @queue_size
+        if get_active_thread_count(threads) < @queueSize
           threads << run_test(test)
           test = get_next_test(test_objects)
         end
@@ -251,8 +262,8 @@ module DATSauce
 
     def get_next_test(test_objects)
       test_objects.each do |test|
-        if test.status == "In Queue"
-          test.status = "Processing"
+        if test.status == 'In Queue'
+          test.status = 'Processing'
           return test
         end
       end
@@ -273,7 +284,7 @@ module DATSauce
 
     def get_next_rerun_test(test_objects)
       test_objects.each do |test|
-        if test.status == 'Failed' && test.run_count <= 1
+        if test.status == 'Failed' && test.runCount <= 1
           test.status = 'Processing'
           return test
         end
@@ -300,42 +311,13 @@ module DATSauce
     #TODO - add some progress bar modifications here while the results are being processed. This appears to take a while.
     # TODO: this should not be here. This should be part of a event handler
     def process_run_results(test_objects, run_type, start_time, run_id)
-      @event_emitter.emit_event :info => "Processing results. This may take a minute..."
+      @event_emitter.emit_event :info => 'Processing results. This may take a minute...'
 
-      # primary_results_log = ''
-      # primary_run_time = 0
-      # primary_failures = []
-      # rerun_results_log = ''
-      # rerun_failures = []
-      # rerun_run_time = 0
       primary = []
       rerun = []
       @event_emitter.emit_event :update_stats => '' #this needs to be an object not a string. will implement later
       test_objects.each do |test|
-        # begin
-        #
-        #   if run_type == :primary
-        #     primary_results_log << test.results[:primary].log
-        #     primary_run_time += test.results[:primary].run_time
-        #     primary_failures << test.results[:primary].failed_tests
-        #     results = DATSauce::Result.new({:results => primary_results_log, :failed_tests => primary_failures }, start_time, run_id, 'primary')
-        #     results.aggregate_run_time = primary_run_time
-        #     @results[:primary] = results
-        #   elsif run_type == :rerun
-        #     unless test.results[:rerun].nil?
-        #       rerun_results_log << test.results[:rerun].log
-        #       rerun_run_time += test.results[:rerun].run_time
-        #       rerun_failures << test.results[:rerun].failed_tests
-        #       results = DATSauce::Result.new({:results => rerun_results_log, :failed_tests => rerun_failures }, start_time, run_id, 'rerun')
-        #       results.aggregate_run_time = rerun_run_time
-        #       @results[:rerun] = results
-        #     end
-        #   end
-        # rescue => e
-        #   puts e
-        #   puts "here is the contents of the result"
-        #   puts test.results
-        # end
+
         if run_type == :primary
           primary << test.results[:primary]
           primary.flatten!
@@ -355,7 +337,7 @@ module DATSauce
     end
 
     def summarize_results
-
+      #TODO: this really should not be here. The summarizing of results should be done by an event handler
       puts '#############################'
       puts 'Primary run results'
       puts "Total Number of Scenarios ran: #{@results[:primary].scenario_list.length}"
@@ -391,6 +373,7 @@ module DATSauce
     end
 
     def print_failures(failures)
+      #TODO: this should also not be here and handled by an event handler
       failures.each do |failure|
         puts "\e[37m#{failure}\e[0m"
       end

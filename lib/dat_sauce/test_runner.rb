@@ -23,33 +23,32 @@ module DATSauce
             puts e.backtrace
           end
 
-          # temp_file = Tempfile.new('test_run')
-
+          temp_file = Tempfile.new('test_run')
           outputs = _options.scan(/-f \S+/)
-          #TODO: need to change the output from pretty to json.
+
+          # if there were no specified output formatters, run the tests in json format and record the results
           if outputs.empty?
             io = Object::IO.popen("bundle exec cucumber #{test} #{_options} -f json")
-            # io = Object::IO.popen("bundle exec cucumber #{test} #{_options} -f json -f rerun --out #{temp_file.path}")
+            until io.eof? do
+              result = io.gets
+
+              _results += result
+            end
+            Process.wait2(io.pid)
           else
-            # io = Object::IO.popen("bundle exec cucumber #{test} #{_options} -f rerun --out #{temp_file.path}")
-            io = Object::IO.popen("bundle exec cucumber #{test} #{_options} ")
+            # if there were output formatters specified, pipe those to stdout(this is done by default), send the json results to a temp file
+            # and read back that file into memory(in the form of a variable).
+            # This way, the user can get console output of their choosing(presumably cucumber default output) without having to implement
+            # a custom event handler. I might have to make other changes in the code for this.
+            io = Object::IO.popen("bundle exec cucumber #{test} #{_options} -f json --out #{temp_file.path} ")
+            Process.wait2(io.pid)
+            _results = process_temp_file(temp_file)
           end
-
-          until io.eof? do
-            result = io.gets
-
-            _results += result
-          end
-          Process.wait2(io.pid)
-          # result_hash = {}
-          # result_hash[:failed_tests] = process_temp_file(temp_file)
-          #_results should be a JSON string
-          # result_hash[:results] = JSON.parse(_results)
-          # result_hash
           JSON.parse(_results)
         end
 
         private
+
 
         def process_temp_file(file)
           failed_scenarios = ''
