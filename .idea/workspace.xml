@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c94a1fc-7c6c-499f-b04b-a3b621f4620e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/dat_sauce/event_handlers/default_event_handler.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dat_sauce.iml" afterPath="$PROJECT_DIR$/.idea/dat_sauce.iml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/dat_sauce-1.2.2.gem" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/event_handlers/progress_bar/progress_bar.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/event_handlers/progress_bar/progress_bar.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/event_handlers/team_city/team_city.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/event_handlers/team_city/team_city.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/test_runner.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/test_runner.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/version.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/version.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/spec/cucumber/test_results.json" afterPath="$PROJECT_DIR$/lib/spec/cucumber/test_results.json" />
     </list>
     <ignored path="dat_sauce.iws" />
@@ -53,11 +49,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="team_city.rb" pinned="false" current-in-tab="true">
+      <file leaf-file-name="team_city.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/dat_sauce/event_handlers/team_city/team_city.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" column="29" lean-forward="false" selection-start-line="11" selection-start-column="29" selection-end-line="11" selection-end-column="29" />
+            <state relative-caret-position="135">
+              <caret line="9" column="25" lean-forward="false" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="version.rb" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/lib/dat_sauce/version.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="19" lean-forward="true" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -123,16 +129,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_results.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/spec/cucumber/test_results.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="7" lean-forward="false" selection-start-line="9" selection-start-column="7" selection-end-line="9" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FindInProjectRecents">
@@ -178,7 +174,6 @@
         <option value="$PROJECT_DIR$/lib/dat_sauce/test_run_result.rb" />
         <option value="$PROJECT_DIR$/lib/spec/results_parser_spec.rb" />
         <option value="$PROJECT_DIR$/lib/spec/test_runner_spec.rb" />
-        <option value="$PROJECT_DIR$/lib/dat_sauce/version.rb" />
         <option value="$PROJECT_DIR$/travis.yml" />
         <option value="$PROJECT_DIR$/lib/dat_sauce/event_handlers/mongo_database/mongo_handler.rb" />
         <option value="$PROJECT_DIR$/lib/dat_sauce.rb" />
@@ -197,6 +192,7 @@
         <option value="$PROJECT_DIR$/lib/dat_sauce/event_handlers/event_handler.rb" />
         <option value="$PROJECT_DIR$/lib/dat_sauce/event_handlers/progress_bar/progress_bar.rb" />
         <option value="$PROJECT_DIR$/lib/dat_sauce/event_handlers/team_city/team_city.rb" />
+        <option value="$PROJECT_DIR$/lib/dat_sauce/version.rb" />
       </list>
     </option>
   </component>
@@ -641,12 +637,12 @@
       <workItem from="1485824096785" duration="23000" />
       <workItem from="1486228195873" duration="602000" />
       <workItem from="1486507950317" duration="1582000" />
-      <workItem from="1488491813445" duration="170698000" />
+      <workItem from="1488491813445" duration="170908000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="180665000" />
+    <option name="totallyTimeSpent" value="180875000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1384" y="38" width="1117" height="812" extended-state="0" />
@@ -852,14 +848,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
           <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/dat_sauce/version.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="16" lean-forward="false" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
           <folding />
         </state>
       </provider>
@@ -1101,8 +1089,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/dat_sauce/event_handlers/team_city/team_city.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="29" lean-forward="false" selection-start-line="11" selection-start-column="29" selection-end-line="11" selection-end-column="29" />
+        <state relative-caret-position="135">
+          <caret line="9" column="25" lean-forward="false" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/dat_sauce/version.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="19" lean-forward="true" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
           <folding />
         </state>
       </provider>
