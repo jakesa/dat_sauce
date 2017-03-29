@@ -18,7 +18,7 @@ module DATSauce
             end
 
           rescue => e
-            puts "there was an error"
+            puts 'there was an error'
             puts e
             puts e.backtrace
           end
@@ -28,13 +28,13 @@ module DATSauce
 
           # if there were no specified output formatters, run the tests in json format and record the results
           if outputs.empty?
-            io = Object::IO.popen("bundle exec cucumber #{test} #{_options} -f json")
-            until io.eof? do
-              result = io.gets
-
-              _results += result
-            end
+            io = Object::IO.popen("bundle exec cucumber #{test} #{_options} -f json --out #{temp_file.path}")
+            # until io.eof? do
+              # result = io.gets
+              # _results += result
+            # end
             Process.wait2(io.pid)
+            _results = process_temp_file(temp_file)
           else
             # if there were output formatters specified, pipe those to stdout(this is done by default), send the json results to a temp file
             # and read back that file into memory(in the form of a variable).
@@ -51,11 +51,11 @@ module DATSauce
 
 
         def process_temp_file(file)
-          failed_scenarios = ''
+          results = ''
           until file.eof?
-            failed_scenarios << file.gets
+            results << file.gets
           end
-          failed_scenarios
+          results
         end
       end
 

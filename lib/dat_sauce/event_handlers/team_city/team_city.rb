@@ -9,15 +9,15 @@ class TCEventHandler < DATSauce::EventHandler
 
   def start_test_run(test_run)
     @tc_message_builder = DATSauce::TCMessageBuilder.new
-    render_output @tc_message_builder.start_test_suite test_run.run_id
-    @tc_message_builder.run_id = test_run.run_id
+    render_output @tc_message_builder.start_test_suite test_run.runId
+    @tc_message_builder.run_id = test_run.runId
   end
 
   def stop_test_run(test_run)
 
   end
 
-  def start_rerun(count)
+  def start_rerun(test_run)
     @tc_message_builder.rerun_id = @tc_message_builder.run_id + Time.now.to_i.to_s
     render_output @tc_message_builder.start_test_suite(@tc_message_builder.rerun_id)
   end

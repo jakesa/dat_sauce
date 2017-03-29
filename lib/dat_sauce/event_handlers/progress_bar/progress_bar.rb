@@ -7,7 +7,7 @@ class ProgressBarEventHandler < DATSauce::EventHandler
   end
 
   def start_test_run(test_run)
-    @progress_bar = DATSauce::ProgressBar.new({:count => test_run.test_count})
+    @progress_bar = DATSauce::ProgressBar.new({:count => test_run.testCount})
     @progress_bar.start_progress
     @progress_bar.start_timer
   end
