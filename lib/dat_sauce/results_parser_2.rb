@@ -80,7 +80,7 @@ module DATSauce
             undefined_count: undefined_count,
             pending_count: pending_count,
             failed_scenarios: failed_scenarios,
-            run_time: run_time # this is the run time based on the cucumber results if the tests were un in serial. I include this but its not the actual run time
+            run_time: run_time # this is the run time based on the cucumber results if the tests re
         }
       end
 

@@ -50,7 +50,7 @@
     <orderEntry type="library" scope="PROVIDED" name="cucumber-wire (v0.0.1, RVM: ruby-2.2.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="curses (v1.2.1, RVM: ruby-2.2.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="diff-lcs (v1.2.5, RVM: ruby-2.2.4) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="gherkin (v4.0.0, RVM: ruby-2.2.4) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="gherkin (v4.1.1, RVM: ruby-2.2.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="method_source (v0.8.2, RVM: ruby-2.2.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="multi_json (v1.12.1, RVM: ruby-2.2.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="multi_test (v0.1.2, RVM: ruby-2.2.4) [gem]" level="application" />

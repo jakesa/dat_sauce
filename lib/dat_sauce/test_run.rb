@@ -80,7 +80,7 @@ module DATSauce
       @startDate = Time.now.to_i * 1000
       @status = 'Started'
       start_test_run(create_test_objects(@tests, @runOptions, @runId))
-      puts summarize_results
+      # puts summarize_results
       @status = 'Completed'
       @stopDate = Time.now.to_i * 1000
       @event_emitter.emit_event(test_run_completed: self)
@@ -159,7 +159,7 @@ module DATSauce
         @queueSize = DATSauce::PlatformUtils.processor_count * 2
         # get max threads from platform utils
       end
-      # puts "Size: #{@queue_size}"
+      puts "Size: #{@queueSize}"
       @queueSize
     end
 
@@ -189,13 +189,13 @@ module DATSauce
         end
       end
 
-      @results[:run_time] = Time.now - start_time
-      @event_emitter.emit_event :test_run_completed => self
+      @results[:runTime] = Time.now - start_time
+      # @event_emitter.emit_event :test_run_completed => self
     end
 
     def there_are_failures?(test_objects)
       test_objects.each do |test|
-        return true if test.status == 'Failed' && test.runCount <= 1
+        return true if test.status == 'failed' && test.runCount <= 1
       end
       false
     end
@@ -274,7 +274,7 @@ module DATSauce
     def get_rerun_count(test_objects)
       count = 0
       test_objects.each do |test|
-        if test.status == 'Failed'
+        if test.status == 'failed'
           count +=1
         end
       end
@@ -284,7 +284,7 @@ module DATSauce
 
     def get_next_rerun_test(test_objects)
       test_objects.each do |test|
-        if test.status == 'Failed' && test.runCount <= 1
+        if test.status == 'failed' && test.runCount <= 1
           test.status = 'Processing'
           return test
         end
@@ -336,48 +336,48 @@ module DATSauce
       end
     end
 
-    def summarize_results
-      #TODO: this really should not be here. The summarizing of results should be done by an event handler
-      puts '#############################'
-      puts 'Primary run results'
-      puts "Total Number of Scenarios ran: #{@results[:primary].scenario_list.length}"
-      puts "\e[32mPassed: #{@results[:primary].pass_count} \e[91mFailed: #{@results[:primary].fail_count} \e[96mPending: #{@results[:primary].pending_count} \e[93mUndefined: #{@results[:primary].undefined_count}"
-      unless @results[:primary].failed_scenarios.empty?
-        puts "Failed Scenarios:\n"
-        print_failures(@results[:primary].failed_scenarios)
-      end
-      puts "Took #{calculate_runtime(results[:primary].run_time)}"
-      puts '#############################'
-      unless results[:rerun].nil?
-        puts 'Rerun results'
-        puts "Total Number of Scenarios ran: #{@results[:rerun].scenario_list.length}"
-        puts "\e[32mPassed: #{@results[:rerun].pass_count} \e[91mFailed: #{@results[:rerun].fail_count} \e[96mPending: #{@results[:rerun].pending_count} \e[93mUndefined: #{@results[:rerun].undefined_count}"
-        unless @results[:rerun].failed_scenarios.empty?
-          puts "Failed Scenarios:\n"
-          print_failures(@results[:rerun].failed_scenarios)
-        end
-        puts "Took #{calculate_runtime(results[:rerun].run_time)}"
-        puts '#############################'
-      end
-      puts "Total Runtime: #{calculate_runtime(results[:run_time])}"
-    end
+    # def summarize_results
+    #   #TODO: this really should not be here. The summarizing of results should be done by an event handler
+    #   puts '#############################'
+    #   puts 'Primary run results'
+    #   puts "Total Number of Scenarios ran: #{@results[:primary].scenarios.length}"
+    #   puts "\e[32mPassed: #{@results[:primary].passCount} \e[91mFailed: #{@results[:primary].failCount} \e[96mPending: #{@results[:primary].pendingCount} \e[93mUndefined: #{@results[:primary].undefinedCount}"
+    #   unless @results[:primary].failedScenarios.empty?
+    #     puts "Failed Scenarios:\n"
+    #     print_failures(@results[:primary].failedScenarios)
+    #   end
+    #   puts "Took #{calculate_runtime(results[:primary].runTime)}"
+    #   puts '#############################'
+    #   unless results[:rerun].nil?
+    #     puts 'Rerun results'
+    #     puts "Total Number of Scenarios ran: #{@results[:rerun].scenarios.length}"
+    #     puts "\e[32mPassed: #{@results[:rerun].passCount} \e[91mFailed: #{@results[:rerun].failCount} \e[96mPending: #{@results[:rerun].pendingCount} \e[93mUndefined: #{@results[:rerun].undefinedCount}"
+    #     unless @results[:rerun].failedScenarios.empty?
+    #       puts "Failed Scenarios:\n"
+    #       print_failures(@results[:rerun].failedScenarios)
+    #     end
+    #     puts "Took #{calculate_runtime(results[:rerun].runTime)}"
+    #     puts '#############################'
+    #   end
+    #   puts "Total Runtime: #{calculate_runtime(results[:runTime])}"
+    # end
 
 
-    def calculate_runtime(time)
-      Time.at(time).utc.strftime("%H:%M:%S")
-      # [total_time / 3600, total_time/ 60 % 60, total_time % 60].map { |t| t.to_s.rjust(2,'0') }.join(':')
-    end
+    # def calculate_runtime(time)
+    #   Time.at(time).utc.strftime("%H:%M:%S")
+    #   # [total_time / 3600, total_time/ 60 % 60, total_time % 60].map { |t| t.to_s.rjust(2,'0') }.join(':')
+    # end
 
     def generate_run_id(project_name)
       project_name + "#{Time.now.to_i.to_s}"
     end
 
-    def print_failures(failures)
-      #TODO: this should also not be here and handled by an event handler
-      failures.each do |failure|
-        puts "\e[37m#{failure}\e[0m"
-      end
-    end
+    # def print_failures(failures)
+    #   #TODO: this should also not be here and handled by an event handler
+    #   failures.each do |failure|
+    #     puts "\e[37m#{failure}\e[0m"
+    #   end
+    # end
 
   end
 

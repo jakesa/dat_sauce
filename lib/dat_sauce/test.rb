@@ -12,11 +12,12 @@ module DATSauce
     #   results: "JSON string of results"
     #TODO: consider adding a last_run timestamp for use in the database
     extend CustomAccessor
-    custom_attr_accessor :runId, :uri, :runOptions, :status, :results, :runCount, :testId, :runDate, :name, :lastRun
+    custom_attr_accessor :runId, :uri, :runOptions, :status, :results, :runCount, :testId, :runDate, :name, :lastRun, :lineNumber
 
     def initialize(run_id, test, run_options)
       @runId = run_id
       @runCount = 0
+      @lineNumber = test[:line]
       @uri = "#{test[:uri]}:#{test[:line]}"
       @name = test[:name]
       @testId = test[:id]

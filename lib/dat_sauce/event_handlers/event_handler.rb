@@ -12,7 +12,7 @@ module DATSauce
         {
             :progress_bar => ProgressBarEventHandler,
             :team_city => TCEventHandler,
-            :default => DATSauce::EventHandler,
+            :default => DefaultEventHandler,
             :database => DBEventHandler
         }
       end
