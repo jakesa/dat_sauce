@@ -1,5 +1,4 @@
 require_relative 'event_handler'
-require_relative 'progress_bar/progress_bar'
 require_relative 'team_city/team_city'
 require_relative 'mongo_database/database_handler'
 require_relative 'default_event_handler'

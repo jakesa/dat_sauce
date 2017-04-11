@@ -10,7 +10,6 @@ module DATSauce
 
       def self.event_handlers
         {
-            :progress_bar => ProgressBarEventHandler,
             :team_city => TCEventHandler,
             :default => DefaultEventHandler,
             :database => DBEventHandler
