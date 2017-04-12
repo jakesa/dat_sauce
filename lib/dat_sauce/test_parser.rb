@@ -1,3 +1,4 @@
+require 'tempfile'
 module DATSauce
   module Cucumber
     module TestParser
@@ -47,31 +48,26 @@ module DATSauce
           puts 'Processing test files'
 
           # this takes out any formatters that were passed in while keeping the relevant run options
+          temp_file = Tempfile.new('test_run')
           outputs = cmd.scan(/-f \S+/)
           outputs.each do |output|
             cmd.gsub!(output, "")
           end
 
-          cmd = "bundle exec cucumber --dry-run -f json #{cmd}"
+          cmd = "bundle exec cucumber --dry-run #{cmd} -f json --out #{temp_file.path}"
           tr = Thread.new(cmd) { |c| `#{c}`}
           tr.join
-          JSON.parse tr.value
+          JSON.parse process_temp_file temp_file
         end
 
-        def dry_run(cmd)
-          puts 'Preprocessing test files'
-
-          outputs = cmd.scan(/-f \S+/)
-          outputs.each do |output|
-            cmd.gsub!(output, "")
+        def process_temp_file(file)
+          results = ''
+          until file.eof?
+            results << file.gets
           end
-
-          cmd = "bundle exec cucumber --dry-run -f DryRunFormatter #{cmd}"
-          # puts cmd
-          tr = Thread.new(cmd) { |c| `#{c}`}
-          tr.join
-          tr.value
+          results
         end
+
       end
     end
   end
