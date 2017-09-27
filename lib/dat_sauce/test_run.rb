@@ -26,7 +26,7 @@ module DATSauce
     include EventHandlerRegister
 
     custom_attr_accessor :runId, :projectName, :testCount, :rerun, :runOptions,
-                         :tests, :queueSize, :results, :status, :startDate, :stopDate
+                         :tests, :queueSize, :results, :status, :startDate, :stopDate, :cmd
 
 
     # The TestRun object is responsible for storing and executing the meta data and events of a test run.
@@ -61,13 +61,14 @@ module DATSauce
       @runOptions = hash[:run_options]
       @rerun = hash[:rerun]
       @results = {:primary => nil, :rerun => nil}
-      @runId = generate_run_id(hash[:project_name])
+      @runId = hash[:run_id] ? hash[:run_id] : generate_run_id(hash[:project_name])
       @event_emitter = EventEmitter.new
       @event_emitter.register_event_handlers(get_event_handlers(hash[:outputs]))
       @run_location = hash[:run_location]
       @status = 'Initialized'
       @number_of_processes = hash[:number_of_processes]
       @projectName = hash[:project_name]
+      @cmd = hash[:cmd]
     end
 
 
@@ -79,7 +80,7 @@ module DATSauce
     def run
       @startDate = Time.now.to_i * 1000
       @status = 'Started'
-      start_test_run(create_test_objects(@tests, @runOptions, @runId))
+      start_test_run(create_test_objects(@tests, @runOptions, @runId), @cmd)
       # puts summarize_results
       @status = 'Completed'
       @stopDate = Time.now.to_i * 1000
@@ -164,7 +165,7 @@ module DATSauce
     end
 
     # starts the test run
-    def start_test_run(test_objects)
+    def start_test_run(test_objects, cmd=nil)
 
       @status = 'Running'
       @event_emitter.emit_event :start_test_run => self
@@ -173,16 +174,16 @@ module DATSauce
       threads = []
       get_queue_size.times do
         test = get_next_test(test_objects)
-        threads << run_test(test) unless test.nil?
+        threads << run_test(test, cmd) unless test.nil?
         sleep 0.5 #this is an attempt at a stop gap for the account rental service not being able to handle multiple requests at once (accounts are being rented out when they should not be)
       end
-      start_queue(test_objects, threads)
+      start_queue(test_objects, threads, cmd)
       process_run_results(test_objects, :primary, start_time, @runId)
       if !@rerun.nil? && !@rerun.empty?
         @event_emitter.emit_event :info => 'This test run has been flagged for rerun. Starting rerun...'
         if there_are_failures?(test_objects)
           _start_time = Time.now
-          start_rerun(test_objects, @rerun)
+          start_rerun(test_objects, @rerun, cmd)
           process_run_results(test_objects, :rerun, _start_time, @runId)
         else
           @event_emitter.emit_event :info => 'There were no failures detected. A rerun was not necessary.'
@@ -200,7 +201,7 @@ module DATSauce
       false
     end
 
-    def start_rerun(test_objects, rerun_type)
+    def start_rerun(test_objects, rerun_type, cmd)
       threads = []
       rerun_count = get_rerun_count(test_objects)
 
@@ -219,7 +220,7 @@ module DATSauce
       queue.times do
         test = get_next_rerun_test(test_objects)
         break if test.nil?
-        threads << run_test(test)
+        threads << run_test(test, cmd)
       end
       if get_next_rerun_test(test_objects).nil?
         @event_emitter.emit_event :info => 'There are no more tests in the queue. Waiting for current tests to finish...'
@@ -232,12 +233,12 @@ module DATSauce
 
 
     #TODO: I can probably improve the performance here by doing some kind of caching. Will revisit later
-    def start_queue(test_objects, threads)
+    def start_queue(test_objects, threads, cmd)
       @event_emitter.emit_event :info => 'All test processes full. Sending remaining tests to the test queue...'
       test = get_next_test(test_objects)
       while test != nil
         if get_active_thread_count(threads) < @queueSize
-          threads << run_test(test)
+          threads << run_test(test, cmd)
           test = get_next_test(test_objects)
         end
       end
@@ -297,10 +298,10 @@ module DATSauce
       threads.length
     end
 
-    def run_test(test)
-      Thread.new(test) {|t|
+    def run_test(test, cmd)
+      Thread.new(test, cmd) {|t, _cmd|
         @event_emitter.emit_event :start_test => t
-        t.run
+        t.run(_cmd)
         @event_emitter.emit_event :test_completed => t
 
       } # event_emitter.test_completed(t) /after the test is completed emit the test completion event and send the test object to the emitter

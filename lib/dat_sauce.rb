@@ -11,7 +11,7 @@ module DATSauce
   #     :run_location => Hash, #{:location, :desired_caps}
   #     :number_of_processes => Integer, #the number of concurrent processes you want running tests. Performance will decrease the higher you go. Typically, 2 times the number of physical cores is the ceiling
   # }
-
+  # TODO: Accept a cucumber run command or default to bundle exec cucumber #{run_options}
   def self.run_tests(hash)
     # Signal.trap("INT") do
      # @test_run.stop

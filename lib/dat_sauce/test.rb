@@ -29,12 +29,12 @@ module DATSauce
     end
 
     # run the test
-    def run
+    def run(cmd=nil)
       @runCount += 1
       @status = 'Running'
       time = Time.now
       @lastRun = time.to_i * 1000 #epoch
-      process_results(DATSauce::Cucumber::Runner.run_test(@uri, @runOptions, @runId), time)
+      process_results(DATSauce::Cucumber::Runner.run_test(@uri, @runOptions, @runId, cmd), time)
     end
 
     #--
