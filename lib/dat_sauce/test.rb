@@ -2,6 +2,7 @@ require_relative 'custom_accessor'
 require_relative 'test_result'
 require_relative 'test_runner'
 
+
 module DATSauce
   class Test
     #   run_id: "The id of the run that this test object was created for"  ---- I want to use this to later link to the test run for display in the web app
@@ -29,12 +30,27 @@ module DATSauce
     end
 
     # run the test
+    # return value doesnt matter
     def run(cmd=nil)
+      p = trap('INT') do
+        p = -> {raise SignalException, 'INT'} unless p.respond_to? :call
+        while @out.empty?
+          sleep 1
+        end
+        p.call
+      end
       @runCount += 1
       @status = 'Running'
       time = Time.now
       @lastRun = time.to_i * 1000 #epoch
-      process_results(DATSauce::Cucumber::Runner.run_test(@uri, @runOptions, @runId, cmd), time)
+      @out = ''
+      #returns JSON
+      @out = DATSauce::Cucumber::Runner.run_test(@uri, @runOptions, @runId, cmd)
+      if @out.include? 'message'
+        @status = 'Stopped'
+      else
+        process_results(@out, time) unless @out.nil?
+      end
     end
 
     #--

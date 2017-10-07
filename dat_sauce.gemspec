@@ -23,6 +23,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 2"
   spec.add_development_dependency 'pry'
   spec.add_development_dependency 'yard'
-  spec.add_dependency 'cucumber', ">= 1.3.17"
+  spec.add_dependency 'cucumber', ">= 3.0.0"
 
 end

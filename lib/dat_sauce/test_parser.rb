@@ -3,6 +3,7 @@ module DATSauce
   module Cucumber
     module TestParser
       class << self
+        Thread.abort_on_exception = true
 
         def parse_tests(test_directory, options)
           # tests = dry_run([test_directory, options].compact.join(" ")).split("\n")
@@ -56,7 +57,7 @@ module DATSauce
 
           cmd = "bundle exec cucumber --dry-run #{cmd} -f json --out #{temp_file.path}"
           tr = Thread.new(cmd) { |c| `#{c}`}
-          tr.join
+          tr.join(30)
           JSON.parse process_temp_file temp_file
         end
 

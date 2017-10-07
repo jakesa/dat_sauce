@@ -55,6 +55,7 @@ module DATSauce
     #     :run_location => Hash, #{:location, :desired_caps}
     #     :number_of_processes => Integer, #the number of concurrent processes you want running tests. Performance will decrease the higher you go. Typically, 2 times the number of physical cores is the ceiling
     # }
+
     def initialize(hash)
       @tests = hash[:tests]
       @testCount = @tests.length
@@ -69,6 +70,8 @@ module DATSauce
       @number_of_processes = hash[:number_of_processes]
       @projectName = hash[:project_name]
       @cmd = hash[:cmd]
+      @stopped = false
+      trap_interrupt
     end
 
 
@@ -78,19 +81,49 @@ module DATSauce
     # almost like the async style of node. Will look into it some other time
     #++
     def run
+
       @startDate = Time.now.to_i * 1000
       @status = 'Started'
       start_test_run(create_test_objects(@tests, @runOptions, @runId), @cmd)
-      # puts summarize_results
       @status = 'Completed'
       @stopDate = Time.now.to_i * 1000
       @event_emitter.emit_event(test_run_completed: self)
+      #add login for sending an exit code based on whether or not there were any failures.
     end
 
     # stop the test run
     # @note this has not been implemented yet and is on the TODO list.
     def stop
-      @stopDate = Time.now.to_i * 1000
+      unless @stopped
+        @stopDate = Time.now.to_i * 1000
+        @stopped = true
+        @status = 'Stopped'
+        @event_emitter.emit_event(info: "Received stop request at: #{Time.at(@stopDate)}")
+
+        @threads.each do |t|
+          t.kill
+        end unless @threads.nil?
+
+        @rerun_threads.each do |t|
+          t.kill
+        end unless @rerun_threads.nil?
+
+        # sleep 10
+        @threads.each do |t|
+          t.join
+        end unless @threads.nil?
+
+        @rerun_threads.each do |t|
+          t.join
+        end unless @rerun_threads.nil?
+        @event_emitter.emit_event(info: 'Test Run stopped, waiting for tests to finish')
+        @event_emitter.emit_event(stop_test_run: self)
+        exit 2
+      end
+
+
+      # need access to current threads
+      # It would be nice to be able to send signals to sub processes to stop and record current results
       #TODO: implement this for a graceful shutdown of the test run.
       # TODO: need to emit a test_run_finished event
     end
@@ -151,43 +184,36 @@ module DATSauce
     def get_queue_size
       if @number_of_processes
         @queueSize = @number_of_processes
-      elsif @run_location[:location] == 'sauce'
-        # get max concurrent tests from sauce and assign to @queue_size
-        @queueSize = 50 #this is hard coded for now. Will change later
-      elsif @run_location[:location] == 'grid'
-        # get max nodes from grid
-      elsif @run_location[:location] == 'local'
+      else
         @queueSize = DATSauce::PlatformUtils.processor_count * 2
         # get max threads from platform utils
       end
-      puts "Size: #{@queueSize}"
       @queueSize
     end
 
     # starts the test run
     def start_test_run(test_objects, cmd=nil)
-
       @status = 'Running'
       @event_emitter.emit_event :start_test_run => self
       @event_emitter.emit_event :info => 'Starting test run'
       start_time = Time.now
-      threads = []
+      @threads = []
       get_queue_size.times do
         test = get_next_test(test_objects)
-        threads << run_test(test, cmd) unless test.nil?
+        @threads << run_test(test, cmd) unless test.nil?
         sleep 0.5 #this is an attempt at a stop gap for the account rental service not being able to handle multiple requests at once (accounts are being rented out when they should not be)
       end
-      start_queue(test_objects, threads, cmd)
-      process_run_results(test_objects, :primary, start_time, @runId)
-      if !@rerun.nil? && !@rerun.empty?
+      start_queue(test_objects, @threads, cmd) unless @stopped
+      process_run_results(test_objects, :primary, start_time, @runId) unless @stopped
+      if !@rerun.nil? && !@rerun.empty? || !@stopped
         @event_emitter.emit_event :info => 'This test run has been flagged for rerun. Starting rerun...'
-        if there_are_failures?(test_objects)
+        if there_are_failures?(test_objects) && !@stopped
           _start_time = Time.now
-          start_rerun(test_objects, @rerun, cmd)
-          process_run_results(test_objects, :rerun, _start_time, @runId)
+          start_rerun(test_objects, @rerun, cmd) unless @stopped
+          process_run_results(test_objects, :rerun, _start_time, @runId) unless @stopped
         else
           @event_emitter.emit_event :info => 'There were no failures detected. A rerun was not necessary.'
-        end
+        end unless @stopped
       end
 
       @results[:runTime] = Time.now - start_time
@@ -202,61 +228,80 @@ module DATSauce
     end
 
     def start_rerun(test_objects, rerun_type, cmd)
-      threads = []
-      rerun_count = get_rerun_count(test_objects)
+      if !@stopped
+        @rerun_threads = []
+        rerun_count = get_rerun_count(test_objects)
 
-      @event_emitter.emit_event(:start_rerun => rerun_count)
+        @event_emitter.emit_event(:start_rerun => rerun_count)
 
-      queue = 0
-      # this could be written differently to save a couple of lines of code
-      if rerun_type == 'serial'
-        queue = 1
-      elsif rerun_type == 'parallel'
-        queue = @queueSize
-      else
-        @event_emitter.emit_event :info => 'Did not recognize rerun type or none was passed. Running the rerun in parallel mode'
-        queue = @queueSize
-      end
-      queue.times do
-        test = get_next_rerun_test(test_objects)
-        break if test.nil?
-        threads << run_test(test, cmd)
-      end
-      if get_next_rerun_test(test_objects).nil?
-        @event_emitter.emit_event :info => 'There are no more tests in the queue. Waiting for current tests to finish...'
-        threads.each {|t| t.join}
-      else
-        start_rerun_queue(test_objects, threads, queue)
+        queue = 0
+        # this could be written differently to save a couple of lines of code
+        if rerun_type == 'serial'
+          queue = 1
+        elsif rerun_type == 'parallel'
+          queue = @queueSize
+        else
+          @event_emitter.emit_event :info => 'Did not recognize rerun type or none was passed. Running the rerun in parallel mode'
+          queue = @queueSize
+        end
+        queue.times do
+          test = get_next_rerun_test(test_objects)
+          break if test.nil? || @stopped
+          @rerun_threads << run_test(test, cmd) unless @stopped
+        end unless @stopped
+        if get_next_rerun_test(test_objects).nil? && !@stopped
+          @event_emitter.emit_event :info => 'There are no more tests in the queue. Waiting for current tests to finish...'
+          @rerun_threads.each {|t| t.join}
+        else
+          start_rerun_queue(test_objects, @rerun_threads, queue, cmd) unless @stopped
+        end unless @stopped
       end
 
     end
 
-
+    #TODO: I might want to move all of this thread work to some kind of thread handler
     #TODO: I can probably improve the performance here by doing some kind of caching. Will revisit later
     def start_queue(test_objects, threads, cmd)
       @event_emitter.emit_event :info => 'All test processes full. Sending remaining tests to the test queue...'
       test = get_next_test(test_objects)
       while test != nil
+        break if @stopped
         if get_active_thread_count(threads) < @queueSize
           threads << run_test(test, cmd)
           test = get_next_test(test_objects)
-        end
+        end unless @stopped
       end
-      @event_emitter.emit_event :info => 'Queue complete. Waiting for tests to finish running...'
+      if @stopped
+        @event_emitter.emit_event :info => 'Test run was stopped. Aborting queue and waiting for tests to complete....'
+      else
+        @event_emitter.emit_event :info => 'Queue complete. Waiting for tests to finish running...'
+      end
+
       threads.each do |t|
         t.join
       end
+      # done = false
+      # until done do
+      #   stat = []
+      #   threads.each do |t|
+      #     stat << t.status
+      #   end
+      #   done = true unless stat.include?('sleep') || stat.include?('run') || stat.include?('aborting')
+      #   sleep 1
+      # end
     end
 
-    def start_rerun_queue(test_objects, threads, queue)
+    def start_rerun_queue(test_objects, threads, queue, cmd)
       @event_emitter.emit_event :info => 'All test processes full. Sending remaining tests to the test queue...'
       test = get_next_rerun_test(test_objects)
       while test != nil
+        break if @stopped
         if get_active_thread_count(threads) < queue
-          threads << run_test(test)
+          threads << run_test(test, cmd)
           test = get_next_rerun_test(test_objects)
-        end
-      end
+        end unless @stopped
+      end unless @stopped
+
       @event_emitter.emit_event :info => 'Queue completed. Waiting for current tests to finish...'
       threads.each {|t| t.join}
     end
@@ -302,7 +347,11 @@ module DATSauce
       Thread.new(test, cmd) {|t, _cmd|
         @event_emitter.emit_event :start_test => t
         t.run(_cmd)
-        @event_emitter.emit_event :test_completed => t
+        if t.status == 'Stopped'
+          @event_emitter.emit_event :stop_test => t
+        else
+          @event_emitter.emit_event :test_completed => t
+        end
 
       } # event_emitter.test_completed(t) /after the test is completed emit the test completion event and send the test object to the emitter
       # this keeps the emitter out of the test object while only sending it one thread deep. Hopefully I dont run into resource conflicts here.
@@ -320,7 +369,7 @@ module DATSauce
       test_objects.each do |test|
 
         if run_type == :primary
-          primary << test.results[:primary]
+          primary << test.results[:primary] unless test.results.nil?
           primary.flatten!
         elsif run_type == :rerun
           unless test.results[:rerun].nil?
@@ -337,48 +386,17 @@ module DATSauce
       end
     end
 
-    # def summarize_results
-    #   #TODO: this really should not be here. The summarizing of results should be done by an event handler
-    #   puts '#############################'
-    #   puts 'Primary run results'
-    #   puts "Total Number of Scenarios ran: #{@results[:primary].scenarios.length}"
-    #   puts "\e[32mPassed: #{@results[:primary].passCount} \e[91mFailed: #{@results[:primary].failCount} \e[96mPending: #{@results[:primary].pendingCount} \e[93mUndefined: #{@results[:primary].undefinedCount}"
-    #   unless @results[:primary].failedScenarios.empty?
-    #     puts "Failed Scenarios:\n"
-    #     print_failures(@results[:primary].failedScenarios)
-    #   end
-    #   puts "Took #{calculate_runtime(results[:primary].runTime)}"
-    #   puts '#############################'
-    #   unless results[:rerun].nil?
-    #     puts 'Rerun results'
-    #     puts "Total Number of Scenarios ran: #{@results[:rerun].scenarios.length}"
-    #     puts "\e[32mPassed: #{@results[:rerun].passCount} \e[91mFailed: #{@results[:rerun].failCount} \e[96mPending: #{@results[:rerun].pendingCount} \e[93mUndefined: #{@results[:rerun].undefinedCount}"
-    #     unless @results[:rerun].failedScenarios.empty?
-    #       puts "Failed Scenarios:\n"
-    #       print_failures(@results[:rerun].failedScenarios)
-    #     end
-    #     puts "Took #{calculate_runtime(results[:rerun].runTime)}"
-    #     puts '#############################'
-    #   end
-    #   puts "Total Runtime: #{calculate_runtime(results[:runTime])}"
-    # end
-
-
-    # def calculate_runtime(time)
-    #   Time.at(time).utc.strftime("%H:%M:%S")
-    #   # [total_time / 3600, total_time/ 60 % 60, total_time % 60].map { |t| t.to_s.rjust(2,'0') }.join(':')
-    # end
-
     def generate_run_id(project_name)
       project_name + "#{Time.now.to_i.to_s}"
     end
 
-    # def print_failures(failures)
-    #   #TODO: this should also not be here and handled by an event handler
-    #   failures.each do |failure|
-    #     puts "\e[37m#{failure}\e[0m"
-    #   end
-    # end
+    def trap_interrupt
+      p = Signal.trap('INT') do
+        stop
+        # p = ->{raise SignalException, 'INT'} unless p.respond_to? :call
+        # p.call
+      end
+    end
 
   end
 

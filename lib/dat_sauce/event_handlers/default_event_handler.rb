@@ -12,7 +12,7 @@ class DefaultEventHandler < DATSauce::EventHandler
   # event fired when a test run is stopped
   # @param test_run DATSauce::TestRun
   def stop_test_run(test_run)
-
+    puts "Test Run Stopped."
   end
 
   # event fired when a rerun is started
@@ -42,7 +42,7 @@ class DefaultEventHandler < DATSauce::EventHandler
   # event fired when a test is stopped
   # @param test DATSauce::Test
   def stop_test(test)
-
+    puts "Test was stopped mid execution: #{test.uri}"
   end
 
   # event fired when a test is completed

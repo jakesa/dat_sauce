@@ -8,24 +8,31 @@ module DATSauce
           scenario_path = ''
           run_time = 0
           status = nil
-          json_results.each do |feature|
-            feature_path = feature['uri']
-            feature['elements'].each do |scenario|
-              next if scenario['type'] == 'background'
-              scenario_path = "#{feature_path}:#{scenario['line']}"
 
-              status = check_status(scenario)
-              run_time += get_run_time(scenario)
-
+          if json_results.include? 'message'
+            {
+                scenarioPath: json_results['test'],
+                status: json_results['status'],
+                errorMessage: json_results['message'],
+            }
+          else
+            json_results.each do |feature|
+              feature_path = feature['uri']
+              feature['elements'].each do |scenario|
+                next if scenario['type'] == 'background'
+                scenario_path = "#{feature_path}:#{scenario['line']}"
+                status = check_status(scenario)
+                run_time += get_run_time(scenario)
+              end
             end
+            {
+                scenarioPath: scenario_path,
+                status: status[:status],
+                errorMessage: status[:errorMessage],
+                failedStep: status[:failedStep],
+                runTime: run_time
+            }
           end
-          {
-              scenarioPath: scenario_path,
-              status: status[:status],
-              errorMessage: status[:errorMessage],
-              failedStep: status[:failedStep],
-              runTime: run_time
-          }
         end
 
 
