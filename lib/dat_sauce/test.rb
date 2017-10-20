@@ -47,7 +47,7 @@ module DATSauce
       #returns JSON
       @out = DATSauce::Cucumber::Runner.run_test(@uri, @runOptions, @runId, cmd)
       if @out.include? 'message'
-        @status = 'Stopped'
+        @status = 'Stopped' if @out['message'] == 'stopped'
       else
         process_results(@out, time) unless @out.nil?
       end

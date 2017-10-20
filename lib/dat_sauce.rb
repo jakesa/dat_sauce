@@ -13,7 +13,6 @@ module DATSauce
   # }
   # TODO: Accept a cucumber run command or default to bundle exec cucumber #{run_options}
   def self.run_tests(hash)
-    puts "parsing tests" #debug
     hash[:tests] = DATSauce::Cucumber::TestParser.parse_tests(hash[:test_directory], hash[:run_options])
     @test_run = DATSauce::TestRun.new(hash)
     @test_run.run

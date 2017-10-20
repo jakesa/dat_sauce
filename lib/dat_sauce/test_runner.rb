@@ -35,23 +35,32 @@ module DATSauce
             #and run them in dat_sauce. The problem here is that this implementation is calling a parameter specific to thor. This should probably
             #be pushed into custom definable tasks similar to the Cucumber::Rake::Task that cucumber has implemented for rake.
             #I am doing it like this for the moment to save on time and will come back to re-implement this correctly at a later date.
-
             @io = Object::IO.popen("#{cmd} --file #{test}",'r+')
             IO.copy_stream @io, temp_file
             begin
               Process.wait2(@io.pid)
             rescue
+              # puts e.message #debug
               nil
+            end
+            begin
+              @io.close unless @io.closed?
+            rescue =>e
+              puts e
             end
             @results = process_temp_file temp_file
           end
 
           if @results.empty? && @stopped
-            {'message' => 'stopped'}
+            {'message' => 'stopped', 'status' =>'stopped'}
           elsif @results.empty? && !@stopped
-            {'message' => 'unknown error'}
+            {'test' =>test, 'message' => "unknown error. Output: #{@results}", 'status'=>'failed'}
           else
-            JSON.parse(@results)
+            begin
+              JSON.parse(@results)
+            rescue JSON::ParserError
+              {'test'=>test, 'message' => "JSON parse error. Output: #{@results}", 'status'=>'failed'}
+            end
           end
 
         end

@@ -202,6 +202,7 @@ module DATSauce
         test = get_next_test(test_objects)
         @threads << run_test(test, cmd) unless test.nil?
         sleep 0.5 #this is an attempt at a stop gap for the account rental service not being able to handle multiple requests at once (accounts are being rented out when they should not be)
+        break if test.nil?
       end
       start_queue(test_objects, @threads, cmd) unless @stopped
       process_run_results(test_objects, :primary, start_time, @runId) unless @stopped
