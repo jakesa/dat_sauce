@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c94a1fc-7c6c-499f-b04b-a3b621f4620e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/test.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/test.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/test_run.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/test_run.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/test_runner.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/test_runner.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/version.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/version.rb" />
     </list>
     <ignored path="dat_sauce.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -34,14 +29,14 @@
       <file leaf-file-name="test_run.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_run.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3951">
-              <caret line="310" column="33" lean-forward="false" selection-start-line="310" selection-start-column="33" selection-end-line="310" selection-end-column="33" />
+            <state relative-caret-position="5190">
+              <caret line="410" column="40" lean-forward="true" selection-start-line="410" selection-start-column="40" selection-end-line="410" selection-end-column="40" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="dat_sauce.rb" pinned="false" current-in-tab="true">
+      <file leaf-file-name="dat_sauce.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/dat_sauce.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="210">
@@ -71,7 +66,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_result.rb" pinned="false" current-in-tab="false">
+      <file leaf-file-name="test_result.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_result.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="210">
@@ -84,8 +79,8 @@
       <file leaf-file-name="test_run_result_parser.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_run_result_parser.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="17" column="22" lean-forward="false" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
+            <state relative-caret-position="135">
+              <caret line="9" column="17" lean-forward="false" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -195,9 +190,9 @@
         <option value="$PROJECT_DIR$/lib/dat_sauce/test_parser.rb" />
         <option value="$PROJECT_DIR$/lib/dat_sauce/test.rb" />
         <option value="$PROJECT_DIR$/lib/dat_sauce/test_run_result_parser.rb" />
-        <option value="$PROJECT_DIR$/lib/dat_sauce/test_run.rb" />
         <option value="$PROJECT_DIR$/lib/dat_sauce/test_runner.rb" />
         <option value="$PROJECT_DIR$/lib/dat_sauce/version.rb" />
+        <option value="$PROJECT_DIR$/lib/dat_sauce/test_run.rb" />
       </list>
     </option>
   </component>
@@ -208,9 +203,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="2399" />
+    <option name="x" value="2691" />
     <option name="y" value="96" />
-    <option name="width" value="1440" />
+    <option name="width" value="1148" />
     <option name="height" value="877" />
   </component>
   <component name="ProjectView">
@@ -560,18 +555,18 @@
       <workItem from="1502753332960" duration="6975000" />
       <workItem from="1505432436651" duration="4749000" />
       <workItem from="1505501806068" duration="588000" />
-      <workItem from="1506120025012" duration="79942000" />
+      <workItem from="1506120025012" duration="82022000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="336061000" />
+    <option name="totallyTimeSpent" value="338141000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="2399" y="96" width="1440" height="877" extended-state="0" />
+    <frame x="2691" y="96" width="1148" height="877" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22031474" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.278481" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891566" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -933,42 +928,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_run_result.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="72" lean-forward="false" selection-start-line="26" selection-start-column="72" selection-end-line="26" selection-end-column="72" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="468">
           <caret line="97" column="32" lean-forward="true" selection-start-line="97" selection-start-column="32" selection-end-line="97" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_result.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="68" lean-forward="true" selection-start-line="14" selection-start-column="68" selection-end-line="14" selection-end-column="68" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_run.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3951">
-          <caret line="310" column="33" lean-forward="false" selection-start-line="310" selection-start-column="33" selection-end-line="310" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_run_result_parser.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="22" lean-forward="false" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
           <folding />
         </state>
       </provider>
@@ -1001,6 +964,38 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
           <caret line="14" column="26" lean-forward="false" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_run_result_parser.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="17" lean-forward="false" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_run_result.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="26" column="72" lean-forward="false" selection-start-line="26" selection-start-column="72" selection-end-line="26" selection-end-column="72" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_run.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5190">
+          <caret line="410" column="40" lean-forward="true" selection-start-line="410" selection-start-column="40" selection-end-line="410" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_result.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="68" lean-forward="true" selection-start-line="14" selection-start-column="68" selection-end-line="14" selection-end-column="68" />
           <folding />
         </state>
       </provider>

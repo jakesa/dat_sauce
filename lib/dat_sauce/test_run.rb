@@ -88,6 +88,7 @@ module DATSauce
       @status = 'Completed'
       @stopDate = Time.now.to_i * 1000
       @event_emitter.emit_event(test_run_completed: self)
+      set_status_and_exit
       #add login for sending an exit code based on whether or not there were any failures.
     end
 
@@ -397,6 +398,17 @@ module DATSauce
         # p = ->{raise SignalException, 'INT'} unless p.respond_to? :call
         # p.call
       end
+    end
+
+    def set_status_and_exit
+      if !@results[:primary].nil? && @results[:rerun].nil?
+        @status = 'Failed' if @results[:primary].failCount > 0
+      elsif !@results[:primary].nil? && !@results[:rerun].nil?
+        @status = 'Failed' if @results[:rerun].failCount > 0
+      else
+        @status = 'Passed'
+      end
+      @status == 'Passed' ? exit : exit!
     end
 
   end
