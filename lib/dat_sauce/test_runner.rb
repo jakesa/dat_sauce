@@ -44,9 +44,9 @@ module DATSauce
               nil
             end
             begin
-              @io.close unless @io.closed?
-            rescue =>e
-              puts e
+              @io.close
+            rescue
+              nil
             end
             @results = process_temp_file temp_file
           end

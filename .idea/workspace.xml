@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c94a1fc-7c6c-499f-b04b-a3b621f4620e" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/test_runner.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/test_runner.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/version.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/version.rb" />
     </list>
     <ignored path="dat_sauce.iws" />
@@ -109,8 +111,8 @@
       <file leaf-file-name="test_runner.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_runner.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1065">
-              <caret line="71" column="46" lean-forward="true" selection-start-line="71" selection-start-column="46" selection-end-line="71" selection-end-column="46" />
+            <state relative-caret-position="510">
+              <caret line="48" column="17" lean-forward="false" selection-start-line="48" selection-start-column="17" selection-end-line="48" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -190,8 +192,8 @@
         <option value="$PROJECT_DIR$/lib/dat_sauce/test_parser.rb" />
         <option value="$PROJECT_DIR$/lib/dat_sauce/test.rb" />
         <option value="$PROJECT_DIR$/lib/dat_sauce/test_run_result_parser.rb" />
-        <option value="$PROJECT_DIR$/lib/dat_sauce/test_runner.rb" />
         <option value="$PROJECT_DIR$/lib/dat_sauce/test_run.rb" />
+        <option value="$PROJECT_DIR$/lib/dat_sauce/test_runner.rb" />
         <option value="$PROJECT_DIR$/lib/dat_sauce/version.rb" />
       </list>
     </option>
@@ -555,12 +557,12 @@
       <workItem from="1502753332960" duration="6975000" />
       <workItem from="1505432436651" duration="4749000" />
       <workItem from="1505501806068" duration="588000" />
-      <workItem from="1506120025012" duration="82071000" />
+      <workItem from="1506120025012" duration="82448000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="338190000" />
+    <option name="totallyTimeSpent" value="338567000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="2691" y="96" width="1148" height="877" extended-state="0" />
@@ -944,14 +946,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_runner.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1065">
-          <caret line="71" column="46" lean-forward="true" selection-start-line="71" selection-start-column="46" selection-end-line="71" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/dat_sauce.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -988,6 +982,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
           <caret line="14" column="68" lean-forward="true" selection-start-line="14" selection-start-column="68" selection-end-line="14" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_runner.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="48" column="17" lean-forward="false" selection-start-line="48" selection-start-column="17" selection-end-line="48" selection-end-column="17" />
           <folding />
         </state>
       </provider>
