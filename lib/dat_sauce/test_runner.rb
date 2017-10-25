@@ -12,21 +12,22 @@ module DATSauce
           ENV["AUTOTEST"] = "1" if $stdout.tty?
           trap_interrupt
           @results = nil
-          _options = ''
-
-          begin #TODO: need to rewrite this to be more useful
-            options.each do |option|
-              _options += " #{option}"
-            end
-
-          rescue => e
-            puts 'there was an error'
-            puts e
-            puts e.backtrace
-          end unless options.nil?
 
           temp_file = Tempfile.new('test_run')
+          #Pass in dat_pages config object?
           if cmd.nil?
+            _options = ''
+
+            begin #TODO: need to rewrite this to be more useful
+              options.each do |option|
+                _options += " #{option}"
+              end
+
+            rescue => e
+              puts 'there was an error'
+              puts e
+              puts e.backtrace
+            end unless options.nil?
             @io = Object::IO.popen("bundle exec cucumber #{test} #{_options} -f json --out #{temp_file.path}")
             Process.wait2(@io.pid)
             @results = process_temp_file(temp_file)
@@ -35,34 +36,29 @@ module DATSauce
             #and run them in dat_sauce. The problem here is that this implementation is calling a parameter specific to thor. This should probably
             #be pushed into custom definable tasks similar to the Cucumber::Rake::Task that cucumber has implemented for rake.
             #I am doing it like this for the moment to save on time and will come back to re-implement this correctly at a later date.
-            @io = Object::IO.popen("#{cmd} --file #{test}",'r+')
-            IO.copy_stream @io, temp_file
+            @io = Object::IO.popen("#{cmd} --file #{test} --output_type json --output_file #{temp_file.path}")
+
             begin
               Process.wait2(@io.pid)
             rescue
               # puts e.message #debug
               nil
             end
-            begin
-              @io.close
-            rescue
-              nil
-            end
             @results = process_temp_file temp_file
           end
 
           if @results.empty? && @stopped
-            {'message' => 'stopped', 'status' =>'stopped'}
+           @results = {'message' => 'stopped', 'status' =>'stopped'}
           elsif @results.empty? && !@stopped
-            {'test' =>test, 'message' => "unknown error. Output: #{@results}", 'status'=>'failed'}
+            @results = {'test' =>test, 'message' => "unknown error. Output: #{@results}", 'status'=>'failed'}
           else
             begin
-              JSON.parse(@results)
+             @results = JSON.parse(@results)
             rescue JSON::ParserError
-              {'test'=>test, 'message' => "JSON parse error. Output: #{@results}", 'status'=>'failed'}
+             @results = {'test'=>test, 'message' => "JSON parse error. Output: #{@results}", 'status'=>'failed'}
             end
           end
-
+          @results
         end
 
         private
