@@ -5,8 +5,8 @@ module DATSauce
   class TestRunResult
     extend CustomAccessor
 
-    custom_attr_accessor :log, :resultsSummary, :passCount, :failCount, :failedScenarios, :runTime, :status,
-                         :startTime, :runId, :resultId, :scenarios, :pendingCount, :undefinedCount, :duration
+    custom_attr_accessor :log, :resultsSummary, :passCount, :failCount, :failedTests, :runTime, :status,
+                         :startTime, :testRunId, :id, :scenarios, :pendingCount, :undefinedCount, :duration
 
     def initialize(results, start_time, run_id, result_type)
       # parsed_results = DATSauce::ResultsParser::Cucumber.aggregate_results results
@@ -26,8 +26,9 @@ module DATSauce
       # @status = parsed_results[:fail_count] > 0 ? 'Failed' : 'Passed' #there could be a bug here
       @resultsSummary = DATSauce::ResultsParser::Cucumber::TestRun.parse_results results
       @log = @resultsSummary[:results_log]
+      @id = run_id + "#{Time.now.to_i.to_s}"
       @startTime = start_time
-      @runId = run_id
+      @testRunId = run_id
       @resultType = result_type
       @failCount = @resultsSummary[:failCount]
       @passCount = @resultsSummary[:passCount]
@@ -35,9 +36,10 @@ module DATSauce
       @undefinedCount = @resultsSummary[:undefinedCount]
       @runTime = Time.now - start_time # run time based on the start and stop time of the test from within the dat sauce run process and not the run time off the cucumber results
       @scenarios = @resultsSummary[:scenarios]
-      @failedScenarios = @resultsSummary[:failedScenarios]
+      @failedTests = @resultsSummary[:failedScenarios]
       @status = @resultsSummary[:status]
     end
+
 
     def to_hash
       obj = {}
@@ -48,7 +50,8 @@ module DATSauce
     end
 
     def to_json
-      JSON.generate to_hash
+      hash = to_hash
+      JSON.generate hash
     end
 
     def to_s(log = false)

@@ -13,20 +13,21 @@ module DATSauce
     #   results: "JSON string of results"
     #TODO: consider adding a last_run timestamp for use in the database
     extend CustomAccessor
-    custom_attr_accessor :runId, :uri, :runOptions, :status, :results, :runCount, :testId, :runDate, :name, :lastRun, :lineNumber
+    custom_attr_accessor :runId, :uri, :runOptions, :status, :results, :runCount, :id, :runDate, :name, :lastRun, :lineNumber, :projectId
 
-    def initialize(run_id, test, run_options)
+    def initialize(run_id, test, run_options, projectId)
       @runId = run_id
+      @projectId = projectId
       @runCount = 0
       @lineNumber = test[:line]
       @uri = "#{test[:uri]}:#{test[:line]}"
       @name = test[:name]
-      @testId = test[:id]
+      @id = test[:id]
       @runOptions = run_options
       @status = 'In Queue'
       @results = {:primary => nil, :rerun => nil}
       @runDate = Time.now.to_i * 1000 #this is epoch
-      @lastRun = nil
+      @lastRun = @runId
     end
 
     # run the test
@@ -42,14 +43,14 @@ module DATSauce
       @runCount += 1
       @status = 'Running'
       time = Time.now
-      @lastRun = time.to_i * 1000 #epoch
+      # @lastRun = time.to_i * 1000 #epoch
       @out = ''
       #returns JSON
       @out = DATSauce::Cucumber::Runner.run_test(@uri, @runOptions, @runId, cmd)
       if @out.include? 'message'
         @status = 'Stopped' if @out['message'] == 'stopped'
       else
-        process_results(@out, time) unless @out.nil?
+        process_results(@out, time, Time.now) unless @out.nil?
       end
     end
 
@@ -92,14 +93,14 @@ module DATSauce
     private
 
     # process the results from the test run
-    def process_results(results, start_time)
+    def process_results(results, start_time, end_date)
       #TODO: need to pull the test_id from the results or generate it the same way as the results do
       if @runCount <= 1
-        results = DATSauce::TestResult.new(results, start_time, @runId, 'primary')
+        results = DATSauce::TestResult.new(results, start_time, @runId, 'primary', end_date, @id)
         @results[:primary] = results
         @status = results.status
       else
-        results = DATSauce::TestResult.new(results, start_time, @runId, 'rerun')
+        results = DATSauce::TestResult.new(results, start_time, @runId, 'rerun', end_date, @id)
         @results[:rerun] = results
         @status = results.status
       end

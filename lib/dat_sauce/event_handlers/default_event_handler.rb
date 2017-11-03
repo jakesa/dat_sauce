@@ -75,7 +75,7 @@ class DefaultEventHandler < DATSauce::EventHandler
     puts 'Primary run results'
     puts "Total Number of Scenarios ran: #{@results[:primary].scenarios.length}"
     puts "\e[32mPassed: #{@results[:primary].passCount} \e[91mFailed: #{@results[:primary].failCount} \e[96mPending: #{@results[:primary].pendingCount} \e[93mUndefined: #{@results[:primary].undefinedCount}"
-    unless @results[:primary].failedScenarios.empty?
+    unless @results[:primary].failedTests.empty?
       puts "Failed Scenarios:\n"
       print_failures(@results[:primary].scenarios)
     end
@@ -85,14 +85,14 @@ class DefaultEventHandler < DATSauce::EventHandler
       puts 'Rerun results'
       puts "Total Number of Scenarios ran: #{@results[:rerun].scenarios.length}"
       puts "\e[32mPassed: #{@results[:rerun].passCount} \e[91mFailed: #{@results[:rerun].failCount} \e[96mPending: #{@results[:rerun].pendingCount} \e[93mUndefined: #{@results[:rerun].undefinedCount}"
-      unless @results[:rerun].failedScenarios.empty?
+      unless @results[:rerun].failedTests.empty?
         puts "Failed Scenarios:\n"
         print_failures(@results[:rerun].scenarios)
       end
       puts "Took \e[94m#{calculate_runtime(@results[:rerun].runTime)}\e[0m"
       puts '#############################'
     end
-    puts "Total Runtime: \e[94m#{calculate_runtime(@results[:runTime])}\e[0m"
+    puts "Total Runtime: \e[94m#{calculate_runtime((test_run.endDate/1000) - (test_run.startDate)/1000)}\e[0m"
   end
 
 

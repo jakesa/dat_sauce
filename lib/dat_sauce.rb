@@ -14,8 +14,23 @@ module DATSauce
   # TODO: Accept a cucumber run command or default to bundle exec cucumber #{run_options}
   def self.run_tests(hash)
     hash[:tests] = DATSauce::Cucumber::TestParser.parse_tests(hash[:test_directory], hash[:run_options])
+    parse_handlers(hash)
     @test_run = DATSauce::TestRun.new(hash)
     @test_run.run
     @test_run
   end
+
+  def self.config
+    @config ||= DATSauce::Config.new
+  end
+
+  private
+  # set the database config info if that info is passed in
+  def self.parse_handlers(options)
+    if options[:outputs].include? 'database'
+      config.database_address = options[:database_address] if options[:database_address]
+      config.database_port = options[:database_port] if options[:database_port]
+    end
+  end
+
 end

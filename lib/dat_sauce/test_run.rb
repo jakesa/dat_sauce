@@ -25,8 +25,8 @@ module DATSauce
     extend CustomAccessor
     include EventHandlerRegister
 
-    custom_attr_accessor :runId, :projectName, :testCount, :rerun, :runOptions,
-                         :tests, :queueSize, :results, :status, :startDate, :stopDate, :cmd
+    custom_attr_accessor :id, :projectName, :testCount, :rerun, :runOptions,
+                         :tests, :queueSize, :results, :status, :startDate, :endDate, :cmd, :projectId
 
 
     # The TestRun object is responsible for storing and executing the meta data and events of a test run.
@@ -60,9 +60,10 @@ module DATSauce
       @tests = hash[:tests]
       @testCount = @tests.length
       @runOptions = hash[:run_options]
+      @projectId = hash[:project_id]
       @rerun = hash[:rerun]
       @results = {:primary => nil, :rerun => nil}
-      @runId = hash[:run_id] ? hash[:run_id] : generate_run_id(hash[:project_name])
+      @id = hash[:run_id] ? hash[:run_id] : generate_run_id(hash[:project_name])
       @event_emitter = EventEmitter.new
       @event_emitter.register_event_handlers(get_event_handlers(hash[:outputs]))
       @run_location = hash[:run_location]
@@ -84,11 +85,12 @@ module DATSauce
 
       @startDate = Time.now.to_i * 1000
       @status = 'Started'
-      start_test_run(create_test_objects(@tests, @runOptions, @runId), @cmd)
+      start_test_run(create_test_objects(@tests, @runOptions, @id), @cmd)
       @status = 'Completed'
-      @stopDate = Time.now.to_i * 1000
+      @endDate = Time.now.to_i * 1000
+      set_status
       @event_emitter.emit_event(test_run_completed: self)
-      set_status_and_exit
+      check_status_and_exit
       #add login for sending an exit code based on whether or not there were any failures.
     end
 
@@ -96,10 +98,10 @@ module DATSauce
     # @note this has not been implemented yet and is on the TODO list.
     def stop
       unless @stopped
-        @stopDate = Time.now.to_i * 1000
+        @endDate = Time.now.to_i * 1000
         @stopped = true
         @status = 'Stopped'
-        @event_emitter.emit_event(info: "Received stop request at: #{Time.at(@stopDate)}")
+        @event_emitter.emit_event(info: "Received stop request at: #{Time.at(@endDate)}")
 
         @threads.each do |t|
           t.kill
@@ -166,11 +168,11 @@ module DATSauce
     private
 
     # Creates all of the test objects used to store all of the information for each test that is ran
-    def create_test_objects(tests, run_options, run_id = @runId)
+    def create_test_objects(tests, run_options, run_id = @id)
       @event_emitter.emit_event(:info => 'Creating test objects')
       test_objects = []
       tests.each do |test|
-        test_object = DATSauce::Test.new(run_id, test, run_options)
+        test_object = DATSauce::Test.new(run_id, test, run_options, @projectId)
         test_objects << test_object
         @event_emitter.emit_event(:test_created => test_object)
       end
@@ -206,19 +208,19 @@ module DATSauce
         break if test.nil?
       end
       start_queue(test_objects, @threads, cmd) unless @stopped
-      process_run_results(test_objects, :primary, start_time, @runId) unless @stopped
+      process_run_results(test_objects, :primary, start_time, @id) unless @stopped
       if !@rerun.nil? && !@rerun.empty? || !@stopped
         @event_emitter.emit_event :info => 'This test run has been flagged for rerun. Starting rerun...'
         if there_are_failures?(test_objects) && !@stopped
           _start_time = Time.now
           start_rerun(test_objects, @rerun, cmd) unless @stopped
-          process_run_results(test_objects, :rerun, _start_time, @runId) unless @stopped
+          process_run_results(test_objects, :rerun, _start_time, @id) unless @stopped
         else
           @event_emitter.emit_event :info => 'There were no failures detected. A rerun was not necessary.'
         end unless @stopped
       end
 
-      @results[:runTime] = Time.now - start_time
+      # @results[:runTime] = Time.now - start_time
       # @event_emitter.emit_event :test_run_completed => self
     end
 
@@ -400,14 +402,19 @@ module DATSauce
       end
     end
 
-    def set_status_and_exit
+    def set_status
       if !@results[:primary].nil? && @results[:rerun].nil?
         @status = 'Failed' if @results[:primary].failCount > 0
+        puts @status
       elsif !@results[:primary].nil? && !@results[:rerun].nil?
         @status = 'Failed' if @results[:rerun].failCount > 0
+        puts @status
       else
         @status = 'Passed'
       end
+    end
+
+    def check_status_and_exit
       @status == 'Passed' ? exit : exit!
     end
 

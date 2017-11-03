@@ -7,13 +7,13 @@ module DATSauce
 
     # custom_attr_accessor :log, :results_summary, :pass_count, :fail_count, :failed_scenarios, :run_time, :status,
     #                      :start_time, :run_id, :result_id, :scenario_list, :pending_count, :undefined_count
-    custom_attr_accessor :log, :resultsSummary, :startTime, :runId, :resultType, :status, :runTime, :scenarioPath, :errorMessage,
-                         :failedStep
+    custom_attr_accessor :log, :resultsSummary, :startDate, :testRunId, :resultType, :status, :runTime, :scenarioPath, :errorMessage,
+                         :failedStep, :id, :endDate, :testId
 
-    def initialize(results, start_time, run_id, result_type)
+    def initialize(results, start_date, run_id, result_type, end_date, test_id)
       # parsed_results = DATSauce::ResultsParser::Cucumber.summarize_json_results(results)
       @resultsSummary = DATSauce::ResultsParser::Cucumber::Test.parse_results results
-      @log = results
+      @log = JSON.generate results
       # @start_time = start_time
       # @run_id = run_id
       # @result_type = result_type
@@ -25,11 +25,14 @@ module DATSauce
       # @scenario_list = parsed_results[:scenario_list]
       # @failed_scenarios = parsed_results[:failed_scenarios]
       # @status = parsed_results[:fail_count] > 0 ? 'Failed' : 'Passed' #there could be a bug here
-      @startTime = start_time
-      @runId = run_id
+      @testId = test_id
+      @startDate = start_date
+      @endDate = end_date
+      @testRunId = run_id
+      @id = run_id + "#{(Time.now.to_i/1000)+rand(10000)}"
       @resultType = result_type
       @status = @resultsSummary[:status]
-      @runTime = @resultsSummary[:run_time]
+      @runTime = @resultsSummary[:runTime]
       @scenarioPath = @resultsSummary[:scenarioPath]
       if @status == 'failed'
         @errorMessage = @resultsSummary[:errorMessage]

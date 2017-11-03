@@ -16,17 +16,17 @@ module DATSauce
           pending_count = 0
           failed_scenarios = []
           run_time = 0
+          status = ''
           results_array.each do |results|
             results_summary = results.resultsSummary
-            results_log << results_summary[:log]
+            results_log << results.log
             scenarios << results_summary
-            results_log.flatten!
             case results_summary[:status]
               when 'passed'
                 pass_count += 1
               when 'failed'
                 fail_count += 1
-                failed_scenarios << results_summary[:scenarioPath]
+                failed_scenarios << results.testId
               when 'undefined'
                 undefined_count += 1
               when 'pending'
@@ -34,8 +34,17 @@ module DATSauce
             end
             run_time += results_summary[:runTime]
           end
+          results_log.flatten! unless results_log.flatten.nil?
+          failed_scenarios.flatten! unless failed_scenarios.flatten.nil?
+
+          if fail_count > 0
+            status = 'failed'
+          else
+            status = 'passed'
+          end
 
           {
+              status: status,
               resultsLog: results_log,
               scenarios: scenarios,
               passCount: pass_count,
