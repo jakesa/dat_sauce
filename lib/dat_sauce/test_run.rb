@@ -90,7 +90,7 @@ module DATSauce
       @endDate = Time.now.to_i * 1000
       set_status
       @event_emitter.emit_event(test_run_completed: self)
-      # check_status_and_exit
+      check_status_and_exit
       #add login for sending an exit code based on whether or not there were any failures.
     end
 

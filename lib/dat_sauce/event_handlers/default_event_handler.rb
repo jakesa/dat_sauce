@@ -3,6 +3,9 @@ require_relative 'event_handler'
 
 class DefaultEventHandler < DATSauce::EventHandler
 
+  def initialize
+    STDOUT.sync = true
+  end
   # event fired when a test run is started
   # @param test_run DATSauce::TestRun
   def start_test_run(test_run)
