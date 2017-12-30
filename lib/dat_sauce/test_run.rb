@@ -373,7 +373,10 @@ module DATSauce
       test_objects.each do |test|
 
         if run_type == :primary
-          primary << test.results[:primary] unless test.results.nil?
+          if test.results[:primary].nil?
+            puts "There was a test scheduled to run that didnt: #{test.id}"
+          end
+          primary << test.results[:primary] unless test.results[:primary].nil?
           primary.flatten!
         elsif run_type == :rerun
           unless test.results[:rerun].nil?
@@ -400,15 +403,18 @@ module DATSauce
         # p = ->{raise SignalException, 'INT'} unless p.respond_to? :call
         # p.call
       end
+      Signal.trap('TERM') do
+        stop
+      end
     end
 
     def set_status
       if !@results[:primary].nil? && @results[:rerun].nil?
         @status = 'Failed' if @results[:primary].failCount > 0
-        puts @status
+
       elsif !@results[:primary].nil? && !@results[:rerun].nil?
         @status = 'Failed' if @results[:rerun].failCount > 0
-        puts @status
+
       else
         @status = 'Passed'
       end

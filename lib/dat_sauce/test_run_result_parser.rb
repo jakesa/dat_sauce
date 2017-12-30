@@ -18,21 +18,23 @@ module DATSauce
           run_time = 0
           status = ''
           results_array.each do |results|
-            results_summary = results.resultsSummary
-            results_log << results.log
-            scenarios << results_summary
-            case results_summary[:status]
-              when 'passed'
-                pass_count += 1
-              when 'failed'
-                fail_count += 1
-                failed_scenarios << results.testId
-              when 'undefined'
-                undefined_count += 1
-              when 'pending'
-                pending_count += 1
+            unless results.resultsSummary.nil?
+              results_summary = results.resultsSummary
+              results_log << results.log
+              scenarios << results_summary
+              case results_summary[:status]
+                when 'passed'
+                  pass_count += 1
+                when 'failed'
+                  fail_count += 1
+                  failed_scenarios << results.testId
+                when 'undefined'
+                  undefined_count += 1
+                when 'pending'
+                  pending_count += 1
+              end
+              run_time += results_summary[:runTime]
             end
-            run_time += results_summary[:runTime]
           end
           results_log.flatten! unless results_log.flatten.nil?
           failed_scenarios.flatten! unless failed_scenarios.flatten.nil?

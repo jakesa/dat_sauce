@@ -26,7 +26,7 @@ class ResultsService
 
   def update_test(test)
     res = Net::HTTP.new(@address, @port).patch("/api/tests/#{test.id}", test.to_json, @headers)
-    if res.code == '200'
+    if res.code == '201'
       true
     else
       false
@@ -72,7 +72,7 @@ class ResultsService
 
   def update_test_run(test_run)
     res = Net::HTTP.new(@address, @port).patch("/api/testRuns/#{test_run[:id]}", JSON.generate(test_run), @headers)
-    if res.code == '200'
+    if res.code == '201'
       true
     else
       false

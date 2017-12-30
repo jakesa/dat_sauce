@@ -50,8 +50,13 @@ class DBEventHandler < DATSauce::EventHandler
   def test_run_completed(test_run)
     begin
       test_run.results.each_value do |result|
-        unless result.nil?
-          @results_service.record_test_run_results JSON.generate result.to_hash
+        if result.nil?
+          puts "The test run results were nil: #{result}"
+        else
+          payload = result.to_hash
+          payload.delete :resultsSummary
+          @results_service.record_test_run_results JSON.generate payload
+
         end
       end
 

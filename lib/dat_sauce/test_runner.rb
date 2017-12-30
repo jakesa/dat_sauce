@@ -15,12 +15,13 @@ module DATSauce
 
           temp_file = Tempfile.new('test_run')
           #Pass in dat_pages config object?
+
           if cmd.nil?
             _options = ''
 
             begin #TODO: need to rewrite this to be more useful
               options.each do |option|
-                _options += " #{option}"
+                _options += " #{option}" unless option.start_with?('.')
               end
 
             rescue => e
@@ -28,6 +29,7 @@ module DATSauce
               puts e
               puts e.backtrace
             end unless options.nil?
+
             @io = Object::IO.popen("bundle exec cucumber #{test} #{_options} -f json --out #{temp_file.path}")
             Process.wait2(@io.pid)
             @results = process_temp_file(temp_file)
