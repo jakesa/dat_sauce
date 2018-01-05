@@ -220,8 +220,6 @@ module DATSauce
         end unless @stopped
       end
 
-      # @results[:runTime] = Time.now - start_time
-      # @event_emitter.emit_event :test_run_completed => self
     end
 
     def there_are_failures?(test_objects)
@@ -274,6 +272,7 @@ module DATSauce
           threads << run_test(test, cmd)
           test = get_next_test(test_objects)
         end unless @stopped
+        sleep 1
       end
       if @stopped
         @event_emitter.emit_event :info => 'Test run was stopped. Aborting queue and waiting for tests to complete....'
@@ -290,6 +289,11 @@ module DATSauce
       #   threads.each do |t|
       #     stat << t.status
       #   end
+      #   threads.delete_if {|t| !t.alive?}
+      #   threads.each do |t|
+      #     puts t.value
+      #   end if threads.length == 1
+      #   @event_emitter.emit_event :info => "Waiting on #{threads.length} to finish running"
       #   done = true unless stat.include?('sleep') || stat.include?('run') || stat.include?('aborting')
       #   sleep 1
       # end
@@ -304,6 +308,7 @@ module DATSauce
           threads << run_test(test, cmd)
           test = get_next_rerun_test(test_objects)
         end unless @stopped
+        sleep 1
       end unless @stopped
 
       @event_emitter.emit_event :info => 'Queue completed. Waiting for current tests to finish...'

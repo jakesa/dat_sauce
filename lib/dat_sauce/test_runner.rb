@@ -5,7 +5,7 @@ module DATSauce
   module Cucumber
     module Runner
       class << self
-
+        Thread.abort_on_exception = true
         # TODO - need to add logic for detecting errors?
         # Should I move the even emitter into this runner and emit the start/stop event in here?
         def run_test(test, options, run_id = nil, cmd=nil)
@@ -43,7 +43,6 @@ module DATSauce
             begin
               Process.wait2(@io.pid)
             rescue
-              # puts e.message #debug
               nil
             end
             @results = process_temp_file temp_file
