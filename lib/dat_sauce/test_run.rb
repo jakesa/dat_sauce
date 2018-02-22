@@ -418,7 +418,7 @@ module DATSauce
         if @results[:primary].failCount > 0
           @status = 'Failed'
         else
-          @status == 'Passed'
+          @status = 'Passed'
         end
 
       elsif !@results[:primary].nil? && !@results[:rerun].nil?
