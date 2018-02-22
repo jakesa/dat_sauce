@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c94a1fc-7c6c-499f-b04b-a3b621f4620e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/test_run.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/test_run.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/test_runner.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/test_runner.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/version.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/version.rb" />
     </list>
     <ignored path="dat_sauce.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,7 +26,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="version.rb" pinned="false" current-in-tab="true">
+      <file leaf-file-name="version.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/dat_sauce/version.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="15">
@@ -42,8 +39,8 @@
       <file leaf-file-name="database_handler.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/dat_sauce/event_handlers/mongo_database/database_handler.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-150">
-              <caret line="57" column="72" lean-forward="true" selection-start-line="57" selection-start-column="72" selection-end-line="57" selection-end-column="72" />
+            <state relative-caret-position="855">
+              <caret line="57" column="72" lean-forward="false" selection-start-line="57" selection-start-column="72" selection-end-line="57" selection-end-column="72" />
               <folding />
             </state>
           </provider>
@@ -59,11 +56,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_run.rb" pinned="false" current-in-tab="false">
+      <file leaf-file-name="test_run.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_run.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="395">
-              <caret line="408" column="16" lean-forward="true" selection-start-line="408" selection-start-column="16" selection-end-line="408" selection-end-column="16" />
+            <state relative-caret-position="770">
+              <caret line="433" column="0" lean-forward="true" selection-start-line="433" selection-start-column="0" selection-end-line="433" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -93,7 +90,7 @@
         <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_result_parser.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="570">
-              <caret line="38" column="0" lean-forward="true" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+              <caret line="38" column="0" lean-forward="false" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -103,7 +100,7 @@
         <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_result.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="465">
-              <caret line="31" column="58" lean-forward="true" selection-start-line="31" selection-start-column="58" selection-end-line="31" selection-end-column="58" />
+              <caret line="31" column="58" lean-forward="false" selection-start-line="31" selection-start-column="58" selection-end-line="31" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -112,8 +109,8 @@
       <file leaf-file-name="test.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="465">
-              <caret line="49" column="32" lean-forward="true" selection-start-line="49" selection-start-column="32" selection-end-line="49" selection-end-column="32" />
+            <state relative-caret-position="735">
+              <caret line="49" column="32" lean-forward="false" selection-start-line="49" selection-start-column="32" selection-end-line="49" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -123,7 +120,7 @@
         <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_runner.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="525">
-              <caret line="35" column="14" lean-forward="true" selection-start-line="35" selection-start-column="14" selection-end-line="35" selection-end-column="14" />
+              <caret line="35" column="14" lean-forward="false" selection-start-line="35" selection-start-column="14" selection-end-line="35" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -196,9 +193,9 @@
         <option value="$PROJECT_DIR$/lib/dat_sauce/test_run_result_parser.rb" />
         <option value="$PROJECT_DIR$/lib/dat_sauce/event_handlers/mongo_database/database_handler.rb" />
         <option value="$PROJECT_DIR$/lib/dat_sauce/test_runner.rb" />
-        <option value="$PROJECT_DIR$/lib/dat_sauce/test_run.rb" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/lib/dat_sauce/version.rb" />
+        <option value="$PROJECT_DIR$/lib/dat_sauce/test_run.rb" />
       </list>
     </option>
   </component>
@@ -229,6 +226,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -323,7 +321,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -567,17 +564,18 @@
       <workItem from="1512521755227" duration="6224000" />
       <workItem from="1513305364475" duration="4789000" />
       <workItem from="1514575260484" duration="19200000" />
+      <workItem from="1519333044189" duration="147000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="423090000" />
+    <option name="totallyTimeSpent" value="423237000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="2176" y="163" width="1791" height="1151" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17953116" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18124643" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891566" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -837,7 +835,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="420">
           <caret line="28" column="12" lean-forward="false" selection-start-line="28" selection-start-column="12" selection-end-line="28" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -845,7 +842,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
           <caret line="22" column="17" lean-forward="false" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -861,7 +857,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="570">
           <caret line="38" column="0" lean-forward="false" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -877,7 +872,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="9" column="17" lean-forward="false" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -893,7 +887,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="644">
           <caret line="67" column="8" lean-forward="true" selection-start-line="67" selection-start-column="8" selection-end-line="67" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -901,14 +894,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
           <caret line="72" column="36" lean-forward="true" selection-start-line="72" selection-start-column="36" selection-end-line="72" selection-end-column="36" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/dat_sauce/event_handlers/mongo_database/database_handler.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-150">
-          <caret line="57" column="72" lean-forward="true" selection-start-line="57" selection-start-column="72" selection-end-line="57" selection-end-column="72" />
+        <state relative-caret-position="855">
+          <caret line="57" column="72" lean-forward="false" selection-start-line="57" selection-start-column="72" selection-end-line="57" selection-end-column="72" />
           <folding />
         </state>
       </provider>
@@ -923,8 +915,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="49" column="32" lean-forward="true" selection-start-line="49" selection-start-column="32" selection-end-line="49" selection-end-column="32" />
+        <state relative-caret-position="735">
+          <caret line="49" column="32" lean-forward="false" selection-start-line="49" selection-start-column="32" selection-end-line="49" selection-end-column="32" />
           <folding />
         </state>
       </provider>
@@ -932,7 +924,7 @@
     <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_result_parser.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="570">
-          <caret line="38" column="0" lean-forward="true" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+          <caret line="38" column="0" lean-forward="false" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -940,7 +932,7 @@
     <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_result.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="465">
-          <caret line="31" column="58" lean-forward="true" selection-start-line="31" selection-start-column="58" selection-end-line="31" selection-end-column="58" />
+          <caret line="31" column="58" lean-forward="false" selection-start-line="31" selection-start-column="58" selection-end-line="31" selection-end-column="58" />
           <folding />
         </state>
       </provider>
@@ -956,15 +948,7 @@
     <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_runner.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="525">
-          <caret line="35" column="14" lean-forward="true" selection-start-line="35" selection-start-column="14" selection-end-line="35" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_run.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
-          <caret line="408" column="16" lean-forward="true" selection-start-line="408" selection-start-column="16" selection-end-line="408" selection-end-column="16" />
+          <caret line="35" column="14" lean-forward="false" selection-start-line="35" selection-start-column="14" selection-end-line="35" selection-end-column="14" />
           <folding />
         </state>
       </provider>
@@ -981,6 +965,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="1" column="18" lean-forward="false" selection-start-line="1" selection-start-column="18" selection-end-line="1" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_run.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="770">
+          <caret line="433" column="0" lean-forward="true" selection-start-line="433" selection-start-column="0" selection-end-line="433" selection-end-column="0" />
           <folding />
         </state>
       </provider>
