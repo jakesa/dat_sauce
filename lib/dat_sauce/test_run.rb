@@ -415,13 +415,19 @@ module DATSauce
 
     def set_status
       if !@results[:primary].nil? && @results[:rerun].nil?
-        @status = 'Failed' if @results[:primary].failCount > 0
-
+        if @results[:primary].failCount > 0
+          @status = 'Failed'
+        else
+          @status = 'Passed'
+        end
       elsif !@results[:primary].nil? && !@results[:rerun].nil?
-        @status = 'Failed' if @results[:rerun].failCount > 0
-
+        if @results[:rerun].failCount > 0
+          @status = 'Failed'
+        else
+          @status = 'Passed'
+        end
       else
-        @status = 'Passed'
+        @status = 'Incomplete'
       end
     end
 
