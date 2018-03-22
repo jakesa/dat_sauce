@@ -433,7 +433,7 @@ module DATSauce
     end
 
     def check_status_and_exit
-      @status == 'Passed' ? exit : exit!
+      @status == 'Passed' ? exit : exit(1)
     end
 
   end
