@@ -48,6 +48,16 @@ module DATSauce
               errorMessage: '',
               failedStep: ''
           }
+          scenario['before'].each do |hook|
+            if hook['result']['status'] == 'failed'
+              result[:status] = 'failed'
+              result[:errorMessage] = hook['result']['error_message']
+              result[:failedStep] = hook['match']['location']
+              return result
+            end
+          end
+
+
           scenario['steps'].each do |step|
             case step['result']['status']
               when 'failed'
