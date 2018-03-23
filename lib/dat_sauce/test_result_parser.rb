@@ -55,7 +55,7 @@ module DATSauce
               result[:failedStep] = hook['match']['location']
               return result
             end
-          end
+          end unless scenario['before'].nil?
 
 
           scenario['steps'].each do |step|

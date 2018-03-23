@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c94a1fc-7c6c-499f-b04b-a3b621f4620e" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/test_result_parser.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/test_result_parser.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dat_sauce/version.rb" afterPath="$PROJECT_DIR$/lib/dat_sauce/version.rb" />
     </list>
     <ignored path="dat_sauce.iws" />
@@ -99,8 +101,8 @@
       <file leaf-file-name="test_result_parser.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_result_parser.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="560">
-              <caret line="62" column="27" lean-forward="true" selection-start-line="62" selection-start-column="27" selection-end-line="62" selection-end-column="27" />
+            <state relative-caret-position="600">
+              <caret line="63" column="42" lean-forward="true" selection-start-line="63" selection-start-column="42" selection-end-line="63" selection-end-column="42" />
               <folding />
             </state>
           </provider>
@@ -206,8 +208,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="2687" />
-    <option name="y" value="185" />
+    <option name="x" value="654" />
+    <option name="y" value="232" />
     <option name="width" value="1791" />
     <option name="height" value="1151" />
   </component>
@@ -568,15 +570,15 @@
       <workItem from="1519334251796" duration="985000" />
       <workItem from="1520552696246" duration="641000" />
       <workItem from="1520980945313" duration="494000" />
-      <workItem from="1521576454491" duration="9519000" />
+      <workItem from="1521576454491" duration="11366000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="434876000" />
+    <option name="totallyTimeSpent" value="436723000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="2687" y="185" width="1791" height="1151" extended-state="0" />
+    <frame x="654" y="232" width="1791" height="1151" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18810749" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -967,8 +969,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/dat_sauce/test_result_parser.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="62" column="27" lean-forward="true" selection-start-line="62" selection-start-column="27" selection-end-line="62" selection-end-column="27" />
+        <state relative-caret-position="600">
+          <caret line="63" column="42" lean-forward="true" selection-start-line="63" selection-start-column="42" selection-end-line="63" selection-end-column="42" />
           <folding />
         </state>
       </provider>
