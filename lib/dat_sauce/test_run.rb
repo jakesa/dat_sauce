@@ -399,7 +399,7 @@ module DATSauce
     end
 
     def generate_run_id(project_name)
-      project_name + "#{Time.now.to_i.to_s}"
+      project_name.delete(' ') + "#{Time.now.to_i.to_s}"
     end
 
     def trap_interrupt
