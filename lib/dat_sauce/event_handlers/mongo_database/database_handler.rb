@@ -103,6 +103,7 @@ class DBEventHandler < DATSauce::EventHandler
            testId: test.id,
            projectId: test.projectId,
            testRunId: test.runId,
+           screenShotId: result.screenShotId,
            log: result.log,
            type: result.resultType,
            runTime: result.runTime,

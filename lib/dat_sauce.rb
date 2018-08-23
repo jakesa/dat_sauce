@@ -1,5 +1,6 @@
 
 Dir[File.dirname(__FILE__) + '/dat_sauce/*.rb'].each {|file| require file }
+Dir[File.dirname(__FILE__) + '/dat_sauce/dat_results/*.rb'].each {|file| require file }
 
 module DATSauce
   # {
@@ -22,6 +23,10 @@ module DATSauce
 
   def self.config
     @config ||= DATSauce::Config.new
+  end
+
+  def self.record_screen_shot(url, file_path, file_name)
+    DATResults::ScreenShot.new(url).record_screen_shot(file_path, file_name)
   end
 
   private

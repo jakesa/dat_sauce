@@ -4,7 +4,7 @@ module DATSauce
   class Config
 
 
-    attr_accessor :database_address, :database_port
+    attr_accessor :database_address, :database_port, :screen_shot_url
 
 
     def initialize
