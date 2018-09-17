@@ -110,7 +110,7 @@ module DATSauce
     end
 
     def scrub_id(id)
-      id.gsub(' ', '-').gsub(/[\/,()#;\\]/,'')
+      id.gsub(' ', '-').gsub(/[\/,()#;&'<>^"\s\\]/,'')
     end
 
   end
